@@ -1,0 +1,20 @@
+{
+	"name": "Cheers",
+	"version": "0.0.1",
+	"description": "Cheers, cool",
+	"dependencies": {
+		"bootstrap": "~3.3",
+        "jquery": "~2",
+        "jquery-ui": "~1.9",
+		"angular": "~1.5",
+		"angular-resource": "~1.5",
+		"angular-cookies": "~1.5",
+		"angular-animate": "~1.5",
+		"angular-touch": "~1.5",
+		"angular-sanitize": "~1.5",
+		"angular-ui-utils": "~0.2",
+		"angular-ui-router": "~0.2",
+        "angular-ui-grid": "~3",
+        "angular-bootstrap": "~0.13"
+	}
+}

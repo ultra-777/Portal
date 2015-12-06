@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<title>{{title}}</title>
+
+	<!-- General META -->
+	<meta charset="utf-8">
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+
+	<!-- Semantic META -->
+	<meta name="keywords" content="{{keywords}}">
+	<meta name="description" content="{{description}}">
+
+	<!-- Facebook META -->
+	<meta property="fb:app_id" content="{{facebookAppId}}">
+	<meta property="og:site_name" content="{{title}}">
+	<meta property="og:title" content="{{title}}">
+	<meta property="og:description" content="{{description}}">
+	<meta property="og:url" content="{{url}}">
+	<meta property="og:image" content="/img/brand/logo.png">
+	<meta property="og:type" content="website">
+
+	<!-- Twitter META -->
+	<meta name="twitter:title" content="{{title}}">
+	<meta name="twitter:description" content="{{description}}">
+	<meta name="twitter:url" content="{{url}}">
+	<meta name="twitter:image" content="/img/brand/logo.png">
+
+	<!-- Fav Icon -->
+	<link href="/application/home/img/brand/favicon.ico" rel="shortcut icon" type="image/x-icon">
+
+	<!--Application CSS Files-->
+	{% for cssFile in cssFiles %}<link rel="stylesheet" href="{{cssFile}}">
+	{% endfor %}
+
+	<!-- HTML5 Shim -->
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+
+	<![endif]-->
+</head>
+
+<body class="ng-cloak">
+<!--<header data-ng-include="'/application/home/views/header.view.html'" class="navbar navbar-fixed-top navbar-inverse"></header>-->
+<table style="width:100%;height:100%">
+
+	<tr style="height:1px;">
+		<td>
+			<div data-ng-include="'/application/header/header.view.html'" ></div>
+		</td>
+	</tr>
+	<tr style="height:99%;">
+		<td style="height:99%;">
+			<div class="content">
+				<div class="container">
+					<section data-ui-view="main"></section>
+				</div>
+			</div>
+		</td>
+	</tr>
+</table>
+<!--
+<header data-ng-include="'/application/home/views/header.view.html'" ></header>
+<section class="content">
+    <section class="container">
+        {% block content %}{% endblock %}
+    </section>
+</section>
+-->
+<!--Embedding The User Object
+<script type="text/javascript">
+	var user = {{ user | json | safe }};
+</script>
+-->
+
+<!--Application JavaScript Files-->
+{% for jsFile in jsFiles %}<script type="text/javascript" src="{{jsFile}}"></script>
+{% endfor %}
+
+{% if process.env.NODE_ENV === 'development' %}
+<!--Livereload script rendered -->
+<script type="text/javascript" src="http://localhost:35729/livereload.js"></script>
+
+{% endif %}
+</body>
+
+</html>
