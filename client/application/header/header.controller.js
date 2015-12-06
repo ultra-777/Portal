@@ -26,7 +26,8 @@ angular
                 .then(function(result){
                     vm.account = result;
                     var prefix = '::ffff:';
-                    var ip = ((result.ip && result.ip.startsWith(prefix)) ? result.ip.substring(prefix.length, ip.length) : result.ip);
+                    var ipCandidate = (result.ip) ? result.ip.toString() : '';
+                    var ip = (ipCandidate.startsWith(prefix) ? ipCandidate.substring(prefix.length, ipCandidate.length) : ipCandidate);
                     if (ip)
                         vm.account.ip = ip;
                     //initializeMenu();
