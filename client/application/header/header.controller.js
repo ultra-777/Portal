@@ -27,7 +27,7 @@ angular
                     vm.account = result;
                     var prefix = '::ffff:';
                     var ipCandidate = (result.ip) ? result.ip.toString() : '';
-                    var ip = (ipCandidate.startsWith(prefix) ? ipCandidate.substring(prefix.length, ipCandidate.length) : ipCandidate);
+                    var ip = ((ipCandidate.indexOf(prefix) > -1) ? ipCandidate.substring(prefix.length, ipCandidate.length) : ipCandidate);
                     if (ip)
                         vm.account.ip = ip;
                     //initializeMenu();
