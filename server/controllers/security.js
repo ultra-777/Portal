@@ -383,7 +383,7 @@ exports.removeOAuthProvider = function(req, res, next) {
 
 exports.getAccountInfo = function(req, res) {
 	var result = {
-		ip: (req.ip && req.ip.startsWith('::ffff:') ? req.ip.substring('::ffff:'.length, '::ffff:'.length) : req.ip),
+		ip: ((req.ip && req.ip.startsWith('::ffff:')) ? req.ip.substring('::ffff:'.length, '::ffff:'.length) : req.ip),
 		secure: req.secure
 	};
 	res.jsonp(result);
