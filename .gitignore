@@ -1,1 +1,5 @@
+/.idea/
+/client/dist/
+/client/lib/
 /repository/
+/node_modules/
