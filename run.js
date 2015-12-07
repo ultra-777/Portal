@@ -37,12 +37,16 @@ db
 
 		io.sockets.on('connection', socket);
 
-
-
-
-		server.listen(config.port, function(){
-			console.log("Express server listening on port " + config.port);
-		});
+		if (config.host){
+			server.listen(config.port, config.host, function(){
+				console.log("Express server listening on host: " + config.host + " port: " + config.port);
+			});
+		}
+		else {
+			server.listen(config.port, function () {
+				console.log("Express server listening on port " + config.port);
+			});
+		}
 
 		try {
 			var fs = require('fs');

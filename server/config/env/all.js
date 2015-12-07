@@ -6,6 +6,7 @@ module.exports = {
 		description: 'Uniwebex',
 		keywords: 'Uniwebex'
 	},
+	host: process.env.HOST || '0.0.0.0',
 	port: process.env.PORT || 80,
 	portSsl: process.env.PORT_SSL || 443,
 	sslKeyFilePath: './server/ssl/key.pem',

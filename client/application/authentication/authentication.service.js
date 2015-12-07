@@ -29,7 +29,7 @@ angular
 				)
 				.then(function(response) {
 					//If successful we assign the response to the global user model
-					//window.sessionStorage.account = JSON.stringify(response);
+					window.sessionStorage.account = JSON.stringify(response);
 
 					continueAfterLogin();
 
@@ -47,7 +47,7 @@ angular
 				'/security/signout',
 				null
 			).then(function(response) {
-				//window.sessionStorage.account = '';
+				window.sessionStorage.account = '';
 				state.go('home');
 				headerMenu.reload();
 				defer.resolve();
@@ -72,7 +72,7 @@ angular
 			)
 			.then(function(response) {
 				//If successful we assign the response to the global user model
-				//window.sessionStorage.account = JSON.stringify(response);
+				window.sessionStorage.account = JSON.stringify(response);
 
 				continueAfterLogin();
 
