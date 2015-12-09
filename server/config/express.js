@@ -115,6 +115,10 @@ module.exports = function() {
 	app.use(helmet.xssFilter());
 	app.use(helmet.ieNoOpen());
 	app.disable('x-powered-by');
+	app.enabled('trust proxy');
+	app.set('trust proxy', true);
+
+
 
 	// Setting the app router and static folder
 	app.use(express.static(path.resolve('./client')));
