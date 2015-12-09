@@ -390,7 +390,6 @@ exports.getAccountInfo = function(req, res) {
 				theIp = theIp + ', ';
 			theIp = theIp + req.ips[i].toString();
 		}
-		theIp = theIp + '(' + req.ips.length + ')'
 	}
 	else if (req.ip)
 		theIp = req.ip.toString();
