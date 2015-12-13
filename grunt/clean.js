@@ -3,7 +3,11 @@ module.exports = {
         force: true
     },
 
-    productionFirst: [
+    developmentZero: [
+        "client/dist/"
+    ],
+
+    productionZero: [
         "client/dist/"
     ],
 

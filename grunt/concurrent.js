@@ -16,19 +16,21 @@ module.exports = {
         //'copy'
     ],
 
+    productionZero: [
+        'clean:productionZero'
+    ],
+
     // Production tasks
     productionFirst: [
-        'clean:productionFirst',
         'jshint'
     ],
     productionSecond: [
         'sass:production',
-        'concat',
-        'uglify',
-        'cssmin:production'
+        'concat'
     ],
     productionThird: [
-        'clean:productionSecond'
+        'cssmin:production',
+        'uglify'
     ],
 
     // Image tasks

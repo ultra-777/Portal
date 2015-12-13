@@ -48,6 +48,7 @@ db
 			});
 		}
 
+		/*
 		try {
 			var fs = require('fs');
 			var https = require('https');
@@ -63,7 +64,7 @@ db
 		catch(err){
 			console.error("SSL is not supported: " + err);
 		}
-
+		*/
 
 		// Logging initialization
 		console.log('-- node (' + process.pid + ') started on port ' + config.port);

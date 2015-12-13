@@ -6,6 +6,7 @@ default:
 development:
   description: 'Development build'
   tasks:
+    - 'concurrent:developmentZero'
     - 'concurrent:developmentFirst'
     - 'concurrent:developmentSecond'
 image:
@@ -20,6 +21,7 @@ devimg:
 production:
   description: 'Production build'
   tasks:
+    - 'concurrent:productionZero'
     - 'concurrent:productionFirst'
     - 'concurrent:productionSecond'
     - 'concurrent:productionThird'
