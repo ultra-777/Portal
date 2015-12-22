@@ -395,7 +395,8 @@ exports.getAccountInfo = function(req, res) {
 		theIp = req.ip.toString();
 	var result = {
 		ip: theIp,
-		secure: req.secure
+		secure: req.secure,
+		headers: req.headers
 	};
 	res.jsonp(result);
 };
