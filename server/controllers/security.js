@@ -393,10 +393,13 @@ exports.getAccountInfo = function(req, res) {
 	}
 	else if (req.ip)
 		theIp = req.ip.toString();
+	var nginxProxy = (req.headers ? req.headers['x-nginx-proxy'] : null);
+	var isSecure = nginxProxy ? (req.headers['x-forwarded-protocol'] == 'https') : req.secure;
+	var userAgent = (req.headers ? req.headers['user-agent'] : null);
 	var result = {
 		ip: theIp,
-		secure: req.secure,
-		headers: req.headers
+		userAgent: userAgent,
+		secure: isSecure
 	};
 	res.jsonp(result);
 };
