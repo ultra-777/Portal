@@ -36,7 +36,7 @@ module.exports = {
             ]
         },
         css: [
-            'client/application/**/*.css'
+            'client/css/**/*.css'
         ],
         js: [
             'client/application/config.js',

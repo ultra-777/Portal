@@ -2,18 +2,19 @@ module.exports = {
 
     // Task options
     options: {
-        limit: 8,
-        logConcurrentOutput: true
+        limit: 8
+        ,logConcurrentOutput: true
     },
 
     // Dev tasks
     developmentFirst: [
-        'clean',
-        'jshint'
+        'clean'
+        ,'jshint'
     ],
     developmentSecond: [
-        'sass:development'//,
-        //'copy'
+        'sass:development'
+        ,'less:development'
+        //,'copy'
     ],
 
     productionZero: [
@@ -23,14 +24,15 @@ module.exports = {
     // Production tasks
     productionFirst: [
         'jshint'
+        ,'sass:production'
+        ,'less:production'
     ],
     productionSecond: [
-        'sass:production',
         'concat'
     ],
     productionThird: [
-        'cssmin:production',
-        'uglify'
+        'cssmin:production'
+        ,'uglify'
     ],
 
     // Image tasks

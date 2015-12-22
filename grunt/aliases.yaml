@@ -6,7 +6,6 @@ default:
 development:
   description: 'Development build'
   tasks:
-    - 'concurrent:developmentZero'
     - 'concurrent:developmentFirst'
     - 'concurrent:developmentSecond'
 image:

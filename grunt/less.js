@@ -1,5 +1,5 @@
 module.exports = {
-
+/*
     // Development settings
     development: {
         options: {
@@ -26,6 +26,31 @@ module.exports = {
             cwd: 'src/styles',
             src: ['*.scss'],
             dest: 'dist/styles',
+            ext: '.css'
+        }]
+    }
+*/
+    development: {
+        options: {
+            paths: ["dist/css"]
+        },
+        files: [{
+            expand: true,
+            cwd: 'client/application/',
+            src: ['**/*.less'],
+            dest: 'client/css',
+            ext: '.css'
+        }]
+    },
+    production: {
+        options: {
+            paths: ["dist/css"]
+        },
+        files: [{
+            expand: true,
+            cwd: 'client/application/',
+            src: ['**/*.less'],
+            dest: 'client/css',
             ext: '.css'
         }]
     }

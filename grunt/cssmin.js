@@ -7,7 +7,7 @@ module.exports = {
             roundingPrecision: -1
         },
         files: {
-            'client/dist/application.min.css': ['client/application/**/*.css']
+            'client/dist/application.min.css': ['client/css/**/*.css']
         }
     }
 

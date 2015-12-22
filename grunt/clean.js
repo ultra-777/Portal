@@ -4,11 +4,13 @@ module.exports = {
     },
 
     developmentZero: [
-        "client/dist/"
+        "client/dist/",
+        "client/css/"
     ],
 
     productionZero: [
-        "client/dist/"
+        "client/dist/",
+        "client/css/"
     ],
 
     productionSecond: [
