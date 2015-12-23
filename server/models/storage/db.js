@@ -18,7 +18,8 @@ function initSequelize(uri){
         new Sequelize(
             uri,
             {
-                pool: true
+                pool: true,
+                logging: false
             }
         );
 
@@ -39,7 +40,7 @@ function initSequelize(uri){
                     //schemaObject.name = schemaObject
                     if ((schemaObject.options) && (schemaObject.options.schema))
                         schemaObject.name = schemaObject.options.schema + '.' + schemaObject.name;
-                    console.log('-- model: ' + resolvedPath);
+                    // console.log('-- model: ' + resolvedPath);
                 }
 
                 var init = reference.init;
