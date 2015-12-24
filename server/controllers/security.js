@@ -7,6 +7,7 @@ var
 	passport = require('passport'),
 	config = require('../config/config'),
 	db = require('../models/storage/db'),
+	uaParser = require('ua-parser-js'),
 	_ = require('lodash');
 
 /**
@@ -396,10 +397,14 @@ exports.getAccountInfo = function(req, res) {
 	var nginxProxy = (req.headers ? req.headers['x-nginx-proxy'] : null);
 	var isSecure = nginxProxy ? (req.headers['x-forwarded-protocol'] == 'https') : req.secure;
 	var userAgent = (req.headers ? req.headers['user-agent'] : null);
+
+	var ua = uaParser(userAgent);
+
 	var result = {
 		ip: theIp,
-		userAgent: userAgent,
-		secure: isSecure
+		userAgent: ua,
+		secure: isSecure,
+
 	};
 	res.jsonp(result);
 };
