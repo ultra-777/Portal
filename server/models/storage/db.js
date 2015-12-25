@@ -40,7 +40,7 @@ function initSequelize(uri){
                     //schemaObject.name = schemaObject
                     if ((schemaObject.options) && (schemaObject.options.schema))
                         schemaObject.name = schemaObject.options.schema + '.' + schemaObject.name;
-                    // console.log('-- model: ' + resolvedPath);
+                     console.log('-- model: ' + resolvedPath);
                 }
 
                 var init = reference.init;
@@ -52,7 +52,7 @@ function initSequelize(uri){
                 var config = reference.config;
                 if (config) {
                     configuration.push(config)
-                    //console.log('-- config: ' + resolvedPath);
+                    console.log('-- config: ' + resolvedPath);
                 }
 
             }

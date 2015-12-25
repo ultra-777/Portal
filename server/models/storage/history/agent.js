@@ -7,27 +7,31 @@
 function model(sequelize, DataTypes) {
     var definition =
         sequelize.define(
-            "session",
+            "agent",
             {
-                id: { type: DataTypes.STRING(255), primaryKey: true, allowNull: false },
-                data: { type: DataTypes.JSON },
-                addressInitial: { type: DataTypes.STRING(256) },
-                addressLast: { type: DataTypes.STRING(256), allowNull: true },
-                created: { type: DataTypes.DATE },
-                updated: { type: DataTypes.DATE, allowNull: true }
+                id: { type: DataTypes.BIGINT, autoIncrement: true, primaryKey: true, allowNull: false },
+                browserName: { type: DataTypes.STRING(256), allowNull: true },
+                browserVersion: { type: DataTypes.STRING(256), allowNull: true },
+                engineName: { type: DataTypes.STRING(256), allowNull: true },
+                engineVersion: { type: DataTypes.STRING(256), allowNull: true },
+                osName: { type: DataTypes.STRING(256), allowNull: true },
+                osVersion: { type: DataTypes.STRING(256), allowNull: true },
+                deviceModel: { type: DataTypes.STRING(256), allowNull: true },
+                deviceType: { type: DataTypes.STRING(256), allowNull: true },
+                deviceVendor: { type: DataTypes.STRING(256), allowNull: true },
+                cpuArchitecture: { type: DataTypes.STRING(256), allowNull: true }
             },
             {
                 // don't add the timestamp attributes (updatedAt, createdAt)
                 timestamps: false,
 
-                schema: "security",
+                schema: "history",
 
-                tableName: 'Sessions'
+                tableName: 'Agents'
             }
         );
     return definition;
 };
-
 
 module.exports = {
     model: model

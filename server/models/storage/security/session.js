@@ -22,13 +22,72 @@ function model(sequelize, DataTypes) {
 
                 schema: "security",
 
-                tableName: 'Sessions'
+                tableName: 'Sessions',
+
+                classMethods: {
+                    flush: function(sessionInstance, agentInstance, callback){
+                        sequelize
+                            .transaction({
+                                autocommit: 'off',
+                                isolationLevel: 'REPEATABLE READ'}
+                            )
+                            .then(function (t) {
+
+                                if (agentInstance) {
+                                    agentInstance
+                                        .save({transaction: t})
+                                        .then(function () {
+                                            sessionInstance.agentId = agentInstance.id;
+                                            sessionInstance
+                                                .save({transaction: t})
+                                                .then(function () {
+                                                    t.commit();
+                                                    callback && callback(null);
+                                                })
+                                                .catch(function (err) {
+                                                    t.rollback();
+                                                    callback && callback(err);
+                                                });
+                                        })
+                                        .catch(function (err) {
+                                            t.rollback();
+                                            callback && callback(err);
+                                        });
+                                }
+                                else {
+                                    sessionInstance
+                                        .save({transaction: t})
+                                        .then(function () {
+                                            t.commit();
+                                            callback && callback(null);
+                                        })
+                                        .catch(function (err) {
+                                            t.rollback();
+                                            callback && callback(err);
+                                        });
+                                }
+                            })
+                            .catch(function(err){
+                                t.rollback();
+                                callback && callback(null, err);
+                            });
+                    }
+                }
             }
         );
     return definition;
 };
 
+function configure(getObjectHandler){
+    var agent = getObjectHandler('agent', 'history');
+    var session = getObjectHandler('session', 'security');
+
+    agent.hasOne(session, {as: 'agent', foreignKey : 'agentId'});
+
+    session.belongsTo(agent);
+}
 
 module.exports = {
-    model: model
+    model: model,
+    config: configure
 };

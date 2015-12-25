@@ -8,6 +8,7 @@ var url = require('url'),
     config = require('./config'),
     db = require('../models/storage/db'),
     Session = require('express-session/session/session'),
+    uaParser = require('ua-parser-js'),
     toString = require('../common/stringify');
 
 
@@ -30,7 +31,7 @@ module.exports = function(connect) {
     var Store = connect.Store || connect.session.Store;
     _options = new optionsImpl(connect.options);
 
-    function updateSession(dbSession, session, callback) {
+    function updateSession(dbSession, session, agent, callback) {
 
         var clientAddress = null;
         if (
@@ -51,15 +52,31 @@ module.exports = function(connect) {
         var needFlush = checkIfUpdateRequired(dbSession, session);
 
         if (needFlush) {
-            dbSession
-                .save()
-                .then(function () {
-                    callback && callback(null);
+            var schemaSession = db.getObject('session', 'security');
+            schemaSession.flush(dbSession, agent, callback);
+            /*
+            sequelize
+                .transaction({
+                    autocommit: 'off',
+                    isolationLevel: 'REPEATABLE READ'}
+                )
+                .then(function (t) {
+                    dbSession
+                        .save({transaction: t})
+                        .then(function () {
+                            t.commit();
+                            callback && callback(null);
+                        })
+                        .catch(function (err) {
+                            t.rollback();
+                            callback && callback(err);
+                        });
                 })
-                .catch(function (err) {
-                    callback && callback(err);
+                .catch(function(err){
+                    t.rollback();
+                    callback && callback(null, err);
                 });
-
+            */
         }
         else
             callback && callback(null, dbSession);
@@ -188,8 +205,46 @@ module.exports = function(connect) {
             if (!targetSession) {
                 targetSession = schemaSession.build();
                 targetSession.id = sid;
+
+                var schemaAgent = db.getObject('agent', 'history');
+                var targetAgent = schemaAgent.build();
+
+                var userAgentData =
+                    (session.req.headers ?
+                        session.req.headers['user-agent']
+                        : null);
+
+                if (userAgentData) {
+                    var userAgentInfo = uaParser(userAgentData);
+                    if (userAgentInfo){
+                        if (userAgentInfo.browser){
+                            targetAgent.browserName = userAgentInfo.browser.name;
+                            targetAgent.browserVersion = userAgentInfo.browser.version;
+                        }
+                        if (userAgentInfo.engine){
+                            targetAgent.engineName = userAgentInfo.engine.name;
+                            targetAgent.engineVersion = userAgentInfo.engine.version;
+                        }
+                        if (userAgentInfo.os){
+                            targetAgent.osName = userAgentInfo.os.name;
+                            targetAgent.osVersion = userAgentInfo.os.version;
+                        }
+                        if (userAgentInfo.device){
+                            targetAgent.deviceName = userAgentInfo.device.model;
+                            targetAgent.deviceVersion = userAgentInfo.device.type;
+                            targetAgent.deviceVersion = userAgentInfo.device.vendor;
+                        }
+                        if (userAgentInfo.cpu){
+                            targetAgent.cpuArchitecture = userAgentInfo.cpu.architecture;
+                        }
+
+                        updateSession(targetSession, session, targetAgent, callback);
+                    }
+                }
+
             }
-            updateSession(targetSession, session, callback);
+            else
+                updateSession(targetSession, session, null, callback);
         })
         .catch(function (err) {
             callback && callback(err);
