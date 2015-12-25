@@ -396,15 +396,17 @@ exports.getAccountInfo = function(req, res) {
 		theIp = req.ip.toString();
 	var nginxProxy = (req.headers ? req.headers['x-nginx-proxy'] : null);
 	var isSecure = nginxProxy ? (req.headers['x-forwarded-protocol'] == 'https') : req.secure;
-	var userAgent = (req.headers ? req.headers['user-agent'] : null);
 
-	var ua = uaParser(userAgent);
+	var schemaSession = db.getObject('session', 'security');
+	schemaSession.get(req.session.id, function(err, data){
 
-	var result = {
-		ip: theIp,
-		userAgent: ua,
-		secure: isSecure,
+		var result = {
+			ip: theIp,
+			secure: isSecure
+		};
 
-	};
-	res.jsonp(result);
+		if (data)
+			result.userAgent = data.agent;
+		res.jsonp(result);
+	});
 };

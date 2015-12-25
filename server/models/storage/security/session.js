@@ -1,8 +1,6 @@
-/**
- * Created by Andrey on 21.12.2014.
- */
 
 "use strict";
+
 
 function model(sequelize, DataTypes) {
     var definition =
@@ -25,6 +23,20 @@ function model(sequelize, DataTypes) {
                 tableName: 'Sessions',
 
                 classMethods: {
+                    get: function(sid, callback){
+                        var schemaSession = sequelize.model('security.session');
+                        var schemaAgent = sequelize.model('history.agent');
+                        schemaSession.find({
+                                where: {id: sid},
+                                include: [{ model: schemaAgent, as: 'agent' }]
+                            })
+                            .then(function (session) {
+                                callback(null, session);
+                            })
+                            .catch(function (err) {
+                                callback && callback(err, null);
+                            });
+                    },
                     flush: function(sessionInstance, agentInstance, callback){
                         sequelize
                             .transaction({

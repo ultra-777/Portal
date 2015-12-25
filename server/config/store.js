@@ -54,29 +54,7 @@ module.exports = function(connect) {
         if (needFlush) {
             var schemaSession = db.getObject('session', 'security');
             schemaSession.flush(dbSession, agent, callback);
-            /*
-            sequelize
-                .transaction({
-                    autocommit: 'off',
-                    isolationLevel: 'REPEATABLE READ'}
-                )
-                .then(function (t) {
-                    dbSession
-                        .save({transaction: t})
-                        .then(function () {
-                            t.commit();
-                            callback && callback(null);
-                        })
-                        .catch(function (err) {
-                            t.rollback();
-                            callback && callback(err);
-                        });
-                })
-                .catch(function(err){
-                    t.rollback();
-                    callback && callback(null, err);
-                });
-            */
+
         }
         else
             callback && callback(null, dbSession);
@@ -174,8 +152,19 @@ module.exports = function(connect) {
 
     Impl.prototype.get = function(sid, callback) {
         var schemaSession = db.getObject('session', 'security');
+        schemaSession.get(sid, function(err, data){
+           if (data){
+               loadSession(data, sid, this.destroy, callback);
+           }else {
+               callback && callback(err, null);
+           }
+        });
+
+        /*
+        var schemaAgent = db.getObject('agent', 'history');
         schemaSession.find({
-            where: {id: sid}
+            where: {id: sid},
+            include: [{ model: schemaAgent, as: 'agent' }]
         })
         .then(function (session) {
             loadSession(session, sid, this.destroy, callback);
@@ -183,6 +172,7 @@ module.exports = function(connect) {
         .catch(function (err) {
             callback && callback(err, null);
         });
+        */
     };
 
     /**
