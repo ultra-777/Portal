@@ -230,9 +230,9 @@ module.exports = function(connect) {
                             targetAgent.osVersion = userAgentInfo.os.version;
                         }
                         if (userAgentInfo.device){
-                            targetAgent.deviceName = userAgentInfo.device.model;
-                            targetAgent.deviceVersion = userAgentInfo.device.type;
-                            targetAgent.deviceVersion = userAgentInfo.device.vendor;
+                            targetAgent.deviceModel = userAgentInfo.device.model;
+                            targetAgent.deviceType = userAgentInfo.device.type;
+                            targetAgent.deviceVendor = userAgentInfo.device.vendor;
                         }
                         if (userAgentInfo.cpu){
                             targetAgent.cpuArchitecture = userAgentInfo.cpu.architecture;
