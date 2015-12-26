@@ -10,6 +10,7 @@ function model(sequelize, DataTypes) {
                 id: { type: DataTypes.STRING(255), primaryKey: true, allowNull: false },
                 data: { type: DataTypes.JSON },
                 addressInitial: { type: DataTypes.STRING(256) },
+                hostInitial:  { type: DataTypes.STRING(256), allowNull: true },
                 addressLast: { type: DataTypes.STRING(256), allowNull: true },
                 created: { type: DataTypes.DATE },
                 updated: { type: DataTypes.DATE, allowNull: true }

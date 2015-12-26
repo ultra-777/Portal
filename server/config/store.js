@@ -5,6 +5,7 @@
 
 
 var url = require('url'),
+    dns = require('dns'),
     config = require('./config'),
     db = require('../models/storage/db'),
     Session = require('express-session/session/session'),
@@ -31,22 +32,12 @@ module.exports = function(connect) {
     var Store = connect.Store || connect.session.Store;
     _options = new optionsImpl(connect.options);
 
-    function updateSession(dbSession, session, agent, callback) {
+    function updateSession(dbSession, session, ip, agent, callback) {
 
-        var clientAddress = null;
-        if (
-            (session !== undefined)
-            && (session !== null)
-            && (session.req !== null)
-        )
-            clientAddress =
-                (session.req.headers['x-forwarded-for'] || '').split(',')[0]
-                || session.req.connection.remoteAddress;
-
-        if (clientAddress !== null) {
+        if (ip !== null) {
             if ((dbSession.addressInitial === undefined) || (dbSession.addressInitial === null))
-                dbSession.addressInitial = clientAddress;
-            dbSession.addressLast = clientAddress;
+                dbSession.addressInitial = ip;
+            dbSession.addressLast = ip;
         }
 
         var needFlush = checkIfUpdateRequired(dbSession, session);
@@ -54,7 +45,6 @@ module.exports = function(connect) {
         if (needFlush) {
             var schemaSession = db.getObject('session', 'security');
             schemaSession.flush(dbSession, agent, callback);
-
         }
         else
             callback && callback(null, dbSession);
@@ -188,6 +178,16 @@ module.exports = function(connect) {
 
         var schemaSession = db.getObject('session', 'security');
 
+        var ip = null;
+        if (
+            (session !== undefined)
+            && (session !== null)
+            && (session.req !== null)
+        )
+        ip =
+            (session.req.headers['x-forwarded-for'] || '').split(',')[0]
+            || session.req.connection.remoteAddress;
+
         schemaSession.find({
             where: {id: sid}
         })
@@ -228,13 +228,25 @@ module.exports = function(connect) {
                             targetAgent.cpuArchitecture = userAgentInfo.cpu.architecture;
                         }
 
-                        updateSession(targetSession, session, targetAgent, callback);
+                        if (ip) {
+                            dns.reverse(ip, function (err, hostNames) {
+                                var hostName = null;
+                                if (hostNames && hostNames.length && hostNames.length > 0)
+                                    hostName = hostNames[0];
+                                if (hostName)
+                                    targetSession.hostInitial = hostName;
+                                updateSession(targetSession, session, ip, targetAgent, callback);
+                            });
+                        }
+                        else {
+                            updateSession(targetSession, session, ip, targetAgent, callback);
+                        }
                     }
                 }
 
             }
             else
-                updateSession(targetSession, session, null, callback);
+                updateSession(targetSession, session, ip, null, callback);
         })
         .catch(function (err) {
             callback && callback(err);

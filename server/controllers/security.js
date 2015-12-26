@@ -5,6 +5,7 @@
  */
 var
 	passport = require('passport'),
+	dns = require('dns'),
 	config = require('../config/config'),
 	db = require('../models/storage/db'),
 	uaParser = require('ua-parser-js'),
@@ -397,6 +398,7 @@ exports.getAccountInfo = function(req, res) {
 	var nginxProxy = (req.headers ? req.headers['x-nginx-proxy'] : null);
 	var isSecure = nginxProxy ? (req.headers['x-forwarded-protocol'] == 'https') : req.secure;
 
+
 	var schemaSession = db.getObject('session', 'security');
 	schemaSession.get(req.session.id, function(err, data){
 
@@ -407,6 +409,11 @@ exports.getAccountInfo = function(req, res) {
 
 		if (data)
 			result.userAgent = data.agent;
-		res.jsonp(result);
+
+		dns.reverse(theIp, function(err, hostNames){
+			if (hostNames && hostNames.length && hostNames.length > 0)
+				result.host = hostNames[0];
+			res.jsonp(result);
+		});
 	});
 };
