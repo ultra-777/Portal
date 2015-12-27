@@ -6,8 +6,8 @@ module.exports = {
         files: [{
             expand: true,
             cwd: 'client/application/',
-            src: ['client/application/**/*.{png,jpg,gif}'],
-            dest: 'client/dist/'
+            src: ['**/*.{png,jpg,gif}'],
+            dest: 'client/images/'
         }]
     }
 };

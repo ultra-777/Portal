@@ -3,15 +3,18 @@ default:
   tasks:
     - production
 
+image:
+  description: 'Image tasks'
+  tasks:
+    - 'concurrent:imageFirst'
+
 development:
   description: 'Development build'
   tasks:
     - 'concurrent:developmentFirst'
     - 'concurrent:developmentSecond'
-image:
-  description: 'Image tasks'
-  tasks:
-    - 'concurrent:imageFirst'
+    - image
+
 devimg:
   description: 'Development build and image tasks'
   tasks:
