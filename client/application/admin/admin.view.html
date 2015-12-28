@@ -57,6 +57,14 @@
             <td>Version</td>
             <td>{{vm.account.userAgent.engineVersion}}</td>
         </tr>
+        <tr>
+            <td>
+                <button type="button" class="btn btn-primary" style="float:left" ng-click="vm.reboot()">reboot</button>
+            </td>
+            <td>
+                <textarea ng-bind="vm.result" readonly noresize></textarea>
+            </td>
+        </tr>
 
     </table>
 </div>

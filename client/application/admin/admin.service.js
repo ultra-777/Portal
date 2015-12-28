@@ -13,5 +13,12 @@ angular
 					'security/getAccountInfo',
 					null);
 		};
+
+		this.reboot = function () {
+			return data.httpRequest(
+					'POST',
+					'admin/reboot',
+					null);
+		};
 	}
 ]);

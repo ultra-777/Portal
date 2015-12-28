@@ -135,17 +135,33 @@ angular
 				var accountLine = window.sessionStorage.account;
 				var account = accountLine ? JSON.parse(accountLine) : null;
 
-				if (account && account.accountName){
+				if (account){
 
-					var adminMenuItem = vm.menu.addItem(vm.menuKeys.admin, onAction, 'Admin');
+					var isAdmin = false;
+					var roles = account.roles;
+					if (roles){
 
-					var title = null;
-					if (account.firstName || account.lastName) {
-						title = (account.firstName ? (account.firstName + ' ') : '') +
-						(account.lastName ? account.lastName : '');
+						angular.forEach(roles, function(role, key){
+							if (role.name == 'admin'){
+								isAdmin = true;
+							}
+						});
 					}
-					else {
-						title = account.accountName;
+
+					if (isAdmin){
+						var adminMenuItem = vm.menu.addItem(vm.menuKeys.admin, onAction, 'Admin');
+					}
+
+					if (account.accountName) {
+
+						var title = null;
+						if (account.firstName || account.lastName) {
+							title = (account.firstName ? (account.firstName + ' ') : '') +
+									(account.lastName ? account.lastName : '');
+						}
+						else {
+							title = account.accountName;
+						}
 					}
 					var accountMenuItem = vm.menu.addItem(null, null, title);
 					accountMenuItem.addItem(vm.menuKeys.signout, onAction, 'Signout');

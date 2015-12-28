@@ -1,19 +1,16 @@
 'use strict';
+var exec = require('child_process').exec;
 
-/**
- * Module dependencies.
- */
-exports.index = function(req, res) {
-	res.render('index', {
-		user: req.user || null
-	});
+
+exports.reboot = function(req, res) {
+    execute('ls -a', function(callback){
+        console.log(callback);
+        res.jsonp(callback);
+    });
 };
 
-exports.userInfo = function(req, res) {
-    var result = {
-        ip: req.ip,
-        secure: req.secure
-    };
-    res.jsonp(result);
-};
+function execute(command, callback){
+    exec(command, function(error, stdout, stderr){ callback(stdout); });
+}
+
 

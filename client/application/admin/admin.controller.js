@@ -9,16 +9,30 @@ angular
         '$location',
         '$window',
         'adminService',
-function (scope, rootScope, timeout, location, window, dataService) {
+function (scope, rootScope, timeout, location, window, adminService) {
 
     var vm = this;
     vm.data = 'admin data';
     vm.account = null;
+    vm.result = null;
+    vm.reboot = reboot;
+
+    function reboot(){
+        vm.result = null;
+        adminService
+            .reboot()
+            .then(function(result){
+                    vm.result = result;
+                },
+            function(err){
+                vm.result = err;
+            });
+    }
 
     function initialize(){
 
 
-        dataService
+        adminService
             .getAccountInfo()
             .then(function(result){
                 vm.account = result;
