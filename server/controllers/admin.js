@@ -22,7 +22,7 @@ exports.build = function(req, res) {
     });
 };
 
-exports.restat = function(req, res) {
+exports.restart = function(req, res) {
     execute('service uniwebex restart', function(callback){
         console.log(callback);
         res.jsonp(callback);
