@@ -4,14 +4,6 @@ var exec = require('child_process').exec;
 exports.pull = function(req, res) {
     execute(
         'git pull',
-        {
-            encoding: 'utf8',
-            timeout: 0,
-            maxBuffer: 1024*1024,
-            killSignal: 'SIGTERM',
-            cwd: null,
-            env: null
-        },
         function(callback){
             console.log(callback);
             res.jsonp(callback);
@@ -20,14 +12,6 @@ exports.pull = function(req, res) {
 
 exports.install = function(req, res) {
     execute('npm install',
-        {
-            encoding: 'utf8',
-            timeout: 0,
-            maxBuffer: 1024*1024,
-            killSignal: 'SIGTERM',
-            cwd: null,
-            env: null
-        },
         function(callback){
             console.log(callback);
         res.jsonp(callback);
@@ -36,14 +20,6 @@ exports.install = function(req, res) {
 
 exports.build = function(req, res) {
     execute('grunt production',
-    {
-        encoding: 'utf8',
-            timeout: 0,
-        maxBuffer: 1024*1024,
-        killSignal: 'SIGTERM',
-        cwd: null,
-        env: null
-    },
     function(callback){
         console.log(callback);
         res.jsonp(callback);
@@ -52,14 +28,6 @@ exports.build = function(req, res) {
 
 exports.restart = function(req, res) {
     execute('restart uniwebex',
-        {
-            encoding: 'utf8',
-            timeout: 0,
-            maxBuffer: 1024*1024,
-            killSignal: 'SIGTERM',
-            cwd: null,
-            env: null
-        },
         function(callback){
         console.log(callback);
         res.jsonp(callback);
@@ -68,6 +36,14 @@ exports.restart = function(req, res) {
 
 exports.reboot = function(req, res) {
     execute('ls -a',
+        function(callback){
+        console.log(callback);
+        res.jsonp(callback);
+    });
+};
+
+function execute(command, callback){
+    exec(command,
         {
             encoding: 'utf8',
             timeout: 0,
@@ -76,14 +52,7 @@ exports.reboot = function(req, res) {
             cwd: null,
             env: null
         },
-        function(callback){
-        console.log(callback);
-        res.jsonp(callback);
-    });
-};
-
-function execute(command, callback){
-    exec(command, function(error, stdout, stderr){ callback(stdout); });
+        function(error, stdout, stderr){ callback(stdout); });
 }
 
 
