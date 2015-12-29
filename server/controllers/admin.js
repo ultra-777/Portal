@@ -24,12 +24,9 @@ exports.build = function(req, res) {
 };
 
 exports.restart = function(req, res) {
-    var output = ''
-    execute('service uniwebex restart',
+    execute('sudo service uniwebex restart',
         function(callback1){
-            if (callback1)
-                output = output + callback1;
-            res.jsonp(output);
+            res.jsonp(callback1);
     });
 };
 
