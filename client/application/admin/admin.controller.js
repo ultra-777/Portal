@@ -15,7 +15,7 @@ function (scope, rootScope, timeout, location, window, adminService) {
     vm.data = 'admin data';
     vm.account = null;
     vm.result = null;
-    vm.pool = pool;
+    vm.pull = pull;
     vm.install = install;
     vm.build = build;
     vm.restart = restart;
@@ -33,10 +33,10 @@ function (scope, rootScope, timeout, location, window, adminService) {
             });
     }
 
-    function pool(){
+    function pull(){
         vm.result = null;
         adminService
-            .pool()
+            .pull()
             .then(function(result){
                     vm.result = result;
                 },

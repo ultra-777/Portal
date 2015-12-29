@@ -19,28 +19,64 @@ exports.pull = function(req, res) {
 };
 
 exports.install = function(req, res) {
-    execute('npm install', function(callback){
-        console.log(callback);
+    execute('npm install',
+        {
+            encoding: 'utf8',
+            timeout: 0,
+            maxBuffer: 1024*1024,
+            killSignal: 'SIGTERM',
+            cwd: null,
+            env: null
+        },
+        function(callback){
+            console.log(callback);
         res.jsonp(callback);
     });
 };
 
 exports.build = function(req, res) {
-    execute('grunt production', function(callback){
+    execute('grunt production',
+    {
+        encoding: 'utf8',
+            timeout: 0,
+        maxBuffer: 1024*1024,
+        killSignal: 'SIGTERM',
+        cwd: null,
+        env: null
+    },
+    function(callback){
         console.log(callback);
         res.jsonp(callback);
     });
 };
 
 exports.restart = function(req, res) {
-    execute('restart uniwebex', function(callback){
+    execute('restart uniwebex',
+        {
+            encoding: 'utf8',
+            timeout: 0,
+            maxBuffer: 1024*1024,
+            killSignal: 'SIGTERM',
+            cwd: null,
+            env: null
+        },
+        function(callback){
         console.log(callback);
         res.jsonp(callback);
     });
 };
 
 exports.reboot = function(req, res) {
-    execute('ls -a', function(callback){
+    execute('ls -a',
+        {
+            encoding: 'utf8',
+            timeout: 0,
+            maxBuffer: 1024*1024,
+            killSignal: 'SIGTERM',
+            cwd: null,
+            env: null
+        },
+        function(callback){
         console.log(callback);
         res.jsonp(callback);
     });
