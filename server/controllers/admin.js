@@ -2,10 +2,20 @@
 var exec = require('child_process').exec;
 
 exports.pull = function(req, res) {
-    execute('git pull', function(callback){
-        console.log(callback);
-        res.jsonp(callback);
-    });
+    execute(
+        'git pull',
+        {
+            encoding: 'utf8',
+            timeout: 0,
+            maxBuffer: 1024*1024,
+            killSignal: 'SIGTERM',
+            cwd: null,
+            env: null
+        },
+        function(callback){
+            console.log(callback);
+            res.jsonp(callback);
+        });
 };
 
 exports.install = function(req, res) {
