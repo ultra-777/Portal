@@ -14,7 +14,8 @@ module.exports = {
 			css: [
 				'client/lib/bootstrap/dist/css/bootstrap.min.css',
 				'client/lib/bootstrap/dist/css/bootstrap-theme.min.css',
-                'client/lib/angular-ui-grid/ui-grid.min.css'
+                'client/lib/angular-ui-grid/ui-grid.min.css',
+				'client/lib/angular-material/angular-material.min.css'
 			],
 			js: [
                 'client/lib/jquery/dist/jquery.min.js',
@@ -25,8 +26,9 @@ module.exports = {
 				'client/lib/angular-touch/angular-touch.min.js',
 				'client/lib/angular-sanitize/angular-sanitize.min.js',
 				'client/lib/angular-ui-router/release/angular-ui-router.min.js',
-				'client/lib/angular-ui-utils/ui-utils.min.js',
                 'client/lib/angular-ui-grid/ui-grid.min.js',
+				'client/lib/angular-aria/angular-aria.min.js',
+				'client/lib/angular-material/angular-material.min.js',
 				'client/lib/angular-bootstrap/ui-bootstrap-tpls.min.js'
 			]
 		},
