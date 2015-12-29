@@ -21,18 +21,6 @@ function (scope, rootScope, timeout, location, window, adminService) {
     vm.restart = restart;
     vm.reboot = reboot;
 
-    function reboot(){
-        vm.result = null;
-        adminService
-            .reboot()
-            .then(function(result){
-                    vm.result = result;
-                },
-            function(err){
-                vm.result = err;
-            });
-    }
-
     function pull(){
         vm.result = null;
         adminService

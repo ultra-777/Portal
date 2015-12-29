@@ -7,6 +7,5 @@ module.exports = function(app) {
 	app.route('/admin/install').post(admin.install);
 	app.route('/admin/build').post(admin.build);
 	app.route('/admin/restart').post(admin.restart);
-    app.route('/admin/reboot').post(admin.reboot);
 
 };

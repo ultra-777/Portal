@@ -27,20 +27,13 @@ exports.build = function(req, res) {
 };
 
 exports.restart = function(req, res) {
-    execute('restart uniwebex',
+    execute('stop uniwebex; start uniwebex',
         function(callback){
         console.log(callback);
         res.jsonp(callback);
     });
 };
 
-exports.reboot = function(req, res) {
-    execute('ls -a',
-        function(callback){
-        console.log(callback);
-        res.jsonp(callback);
-    });
-};
 
 function execute(command, callback){
     exec(command,
