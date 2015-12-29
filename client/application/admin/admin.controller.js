@@ -19,7 +19,6 @@ function (scope, rootScope, timeout, location, window, adminService) {
     vm.install = install;
     vm.build = build;
     vm.restart = restart;
-    vm.reboot = reboot;
 
     function pull(){
         vm.result = null;
