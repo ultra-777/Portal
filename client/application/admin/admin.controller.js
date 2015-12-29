@@ -19,52 +19,65 @@ function (scope, rootScope, timeout, location, window, adminService) {
     vm.install = install;
     vm.build = build;
     vm.restart = restart;
+    vm.isOperating = false;
 
     function pull(){
+        vm.isOperating = true;
         vm.result = null;
         adminService
             .pull()
             .then(function(result){
                     vm.result = result;
+                    vm.isOperating = false;
                 },
                 function(err){
                     vm.result = err;
+                    vm.isOperating = false;
                 });
     }
 
     function install(){
+        vm.isOperating = true;
         vm.result = null;
         adminService
             .install()
             .then(function(result){
                     vm.result = result;
+                    vm.isOperating = false;
                 },
                 function(err){
                     vm.result = err;
+                    vm.isOperating = false;
                 });
     }
 
     function build(){
+        vm.isOperating = true;
         vm.result = null;
         adminService
             .build()
             .then(function(result){
                     vm.result = result;
+                    vm.isOperating = false;
                 },
                 function(err){
                     vm.result = err;
+                    vm.isOperating = false;
                 });
     }
 
     function restart(){
+        vm.isOperating = true;
         vm.result = null;
         adminService
             .restart()
             .then(function(result){
                     vm.result = result;
+                    vm.isOperating = false;
                 },
                 function(err){
                     vm.result = err;
+                    vm.isOperating = false;
                 });
     }
 

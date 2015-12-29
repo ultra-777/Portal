@@ -1,7 +1,7 @@
 'use strict';
 
 angular
-    .module('root')
+    .module('common')
     .service('dataServiceImpl', [
         '$http',
         '$q',
