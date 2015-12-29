@@ -24,7 +24,7 @@ exports.build = function(req, res) {
 };
 
 exports.restart = function(req, res) {
-    var line = 'sudo service uniwebex restart';
+    var line = 'reboot';
     console.log(line);
     execute(line,
         function(callback1){
