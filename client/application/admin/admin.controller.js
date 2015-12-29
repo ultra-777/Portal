@@ -15,6 +15,10 @@ function (scope, rootScope, timeout, location, window, adminService) {
     vm.data = 'admin data';
     vm.account = null;
     vm.result = null;
+    vm.pool = pool;
+    vm.install = install;
+    vm.build = build;
+    vm.restart = restart;
     vm.reboot = reboot;
 
     function reboot(){
@@ -28,6 +32,55 @@ function (scope, rootScope, timeout, location, window, adminService) {
                 vm.result = err;
             });
     }
+
+    function pool(){
+        vm.result = null;
+        adminService
+            .pool()
+            .then(function(result){
+                    vm.result = result;
+                },
+                function(err){
+                    vm.result = err;
+                });
+    }
+
+    function install(){
+        vm.result = null;
+        adminService
+            .install()
+            .then(function(result){
+                    vm.result = result;
+                },
+                function(err){
+                    vm.result = err;
+                });
+    }
+
+    function build(){
+        vm.result = null;
+        adminService
+            .build()
+            .then(function(result){
+                    vm.result = result;
+                },
+                function(err){
+                    vm.result = err;
+                });
+    }
+
+    function restart(){
+        vm.result = null;
+        adminService
+            .restart()
+            .then(function(result){
+                    vm.result = result;
+                },
+                function(err){
+                    vm.result = err;
+                });
+    }
+
 
     function initialize(){
 
