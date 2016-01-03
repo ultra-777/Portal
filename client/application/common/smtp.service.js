@@ -2,16 +2,19 @@
 
 //Menu service used for managing  menus
 angular
-	.module('header')
-	.service('headerService', [
-		'mvcServiceImpl',
+	.module('common')
+	.service('commonSmtpService', [
+		'commonMvcServiceImpl',
 	function(mvc) {
 
-		this.getAccountInfo = function () {
+		this.send = function (mail) {
 			return mvc.httpRequest(
-					'POST',
-					'security/getAccountInfo',
-					null);
+				'POST',
+				'__/send',
+				{
+					mail: mail
+				}
+			);
 		};
 	}
 ]);

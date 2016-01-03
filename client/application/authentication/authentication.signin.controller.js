@@ -10,9 +10,8 @@ angular
         '$window',
         '$state',
         'headerMenuService',
-        'dataServiceImpl',
         'authenticationService',
-function (scope, rootScope, timeout, location, window, state, headerMenu, data, authentication) {
+function (scope, rootScope, timeout, location, window, state, headerMenu, authentication) {
 
     var vm = this;
     vm.login = null;

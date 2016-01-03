@@ -8,7 +8,7 @@ angular
 		'$window',
 		'$state',
 		'$q',
-		'dataServiceImpl',
+		'commonMvcServiceImpl',
 		'headerMenuService',
 	function(rootScope, window, state, q, data, headerMenu) {
 

@@ -167,8 +167,14 @@ angular
 					accountMenuItem.addItem(vm.menuKeys.signout, onAction, 'Signout');
 				}
 				else {
+					var accountMenuItem = vm.menu.addItem(null, null, 'Enter');
+					accountMenuItem.addItem(vm.menuKeys.signin, onAction, 'Signin');
+					accountMenuItem.addItem(vm.menuKeys.signup, onAction, 'Signup');
+
+					/*
 					var signinMenuItem = vm.menu.addItem(vm.menuKeys.signin, onAction, 'Signin');
 					signinMenuItem.addItem(vm.menuKeys.signup, onAction, 'Signup');
+					*/
 				}
 			}
 

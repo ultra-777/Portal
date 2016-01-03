@@ -2,6 +2,7 @@
 
 var tcp = require('net'),
     dns = require('dns'),
+    mailComposer = require('mailcomposer'),
     CRLF = '\r\n';
 
 var exports = module.exports = function(options) {
@@ -93,6 +94,7 @@ var exports = module.exports = function(options) {
 
     function sendToSMTP(domain, srcHost, from, recipients, body, cb) {
         var callback=(typeof cb=='function') ? cb : function(){};
+
         connectMx(domain, function(err, sock) {
             if(err){
                 logger.error('error on connectMx', err.stack);
@@ -142,7 +144,7 @@ var exports = module.exports = function(options) {
                 switch (code) {
                     case 220:
                         //*   220   on server ready
-                        //*   220   服务就绪
+                        //*   220
                         if (/\besmtp\b/i.test(msg)) {
                             // TODO:  determin AUTH type; auth login, auth crm-md5, auth plain
                             cmd = 'EHLO';
@@ -246,6 +248,7 @@ var exports = module.exports = function(options) {
      */
     function sendmail(mail, callback) {
         var recipients = [], groups, srcHost, data, lheader;
+
         if (mail.to) {
             recipients = recipients.concat(getAddresses(mail.to));
         }
@@ -288,10 +291,19 @@ var exports = module.exports = function(options) {
         var content = mail.content.replace(/\r\n/g, '\n').replace(/\n/g, '\r\n');
         data += new Buffer(content).toString('base64');
 
+        var q = mailComposer(mail);
+        q.build(function(err, message){
+            //var msb = message.toString();
+            for (var domain in groups) {
+                sendToSMTP(domain, srcHost, from, groups[domain], message, callback);
+            }
+        });
+
+        /*
         for (var domain in groups) {
             sendToSMTP(domain, srcHost, from, groups[domain], data, callback);
         }
-
+        */
     }
 
     return sendmail;

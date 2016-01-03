@@ -2,7 +2,7 @@
 
 angular
     .module('common')
-    .service('dataServiceImpl', [
+    .service('commonMvcServiceImpl', [
         '$http',
         '$q',
         function (http, q) {

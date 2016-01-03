@@ -4,7 +4,7 @@
 angular
 	.module('admin')
 	.service('adminService', [
-		'dataServiceImpl',
+		'commonMvcServiceImpl',
 	function(data) {
 
 		this.getAccountInfo = function () {

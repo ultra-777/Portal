@@ -7,8 +7,9 @@ angular
         '$rootScope',
         '$timeout',
         'headerService',
+        'commonSmtpService',
         'commonMessageBoxService',
-	function(scope, rootScope, timeout, headerService, messageBox) {
+	function(scope, rootScope, timeout, headerService, smtp, messageBox) {
 
         var vm = this;
         vm.currentTime = null;
@@ -22,7 +23,28 @@ angular
         };
 
         function showMessage(){
-            messageBox.show('message', 'title');
+            smtp.send({
+                from: 'mail@uniwebex.com',
+                to: 'ultra-777@yandex.ru',
+                subject: 'test email',
+                type: 'text/html',
+                content: '<h1><b><i>Cheers ...</i></b></h1>',
+                attachments: [
+                    {   // use URL as an attachment
+                        filename: 'license1.txt',
+                        path: 'https://raw.github.com/andris9/Nodemailer/master/LICENSE'
+                    },
+                    {   // use URL as an attachment
+                        filename: 'license2.txt',
+                        path: 'https://raw.github.com/andris9/Nodemailer/master/LICENSE'
+                    },
+                    {   // use URL as an attachment
+                        filename: 'license3.txt',
+                        path: 'https://raw.github.com/andris9/Nodemailer/master/LICENSE'
+                    }
+                ]
+            });
+            // messageBox.show('message', 'title');
         }
 
         function initialize() {
