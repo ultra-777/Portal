@@ -4,11 +4,11 @@
 angular
 	.module('header')
 	.service('headerService', [
-		'dataServiceImpl',
-	function(data) {
+		'commonMvcServiceImpl',
+	function(mvc) {
 
 		this.getAccountInfo = function () {
-			return data.httpRequest(
+			return mvc.httpRequest(
 					'POST',
 					'security/getAccountInfo',
 					null);
