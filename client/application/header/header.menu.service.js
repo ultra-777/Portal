@@ -15,7 +15,7 @@ angular
 				signup: 1,
 				signin: 2,
 				signout: 3,
-				admin: 4
+				adminUpdate: 4
 			};
 
 			function menuItem(){
@@ -122,8 +122,8 @@ angular
 					case vm.menuKeys.signout: // signout
 						state.go('signout');
 						break;
-					case vm.menuKeys.admin: // admin
-						state.go('admin');
+					case vm.menuKeys.adminUpdate: // admin-update
+						state.go('admin-update');
 						break;
 					default:
 						return;
@@ -149,7 +149,9 @@ angular
 					}
 
 					if (isAdmin){
-						var adminMenuItem = vm.menu.addItem(vm.menuKeys.admin, onAction, 'Admin');
+						var adminMenuItem = vm.menu.addItem(null, null, 'Admin');
+						adminMenuItem.addItem(vm.menuKeys.adminUpdate, onAction, 'Update');
+
 					}
 
 					if (account.accountName) {

@@ -1,14 +1,14 @@
 ﻿'use strict';
 
 angular
-    .module('admin')
-    .controller('adminController', [
+    .module('update')
+    .controller('adminUpdateController', [
         '$scope',
         '$rootScope',
         '$timeout',
         '$location',
         '$window',
-        'adminService',
+        'adminUpdateService',
 function (scope, rootScope, timeout, location, window, adminService) {
 
     var vm = this;
@@ -96,7 +96,6 @@ function (scope, rootScope, timeout, location, window, adminService) {
                     vm.account.ip = ip;
                 if (result.host)
                     vm.account.host = result.host;
-                //initializeMenu();
             }, function(err){
                 var q = 99;
             });

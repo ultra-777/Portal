@@ -2,7 +2,7 @@
 
 //Menu service used for managing  menus
 angular
-	.module('admin')
+	.module('update')
 	.service('adminUpdateService', [
 		'commonMvcServiceImpl',
 	function(data) {

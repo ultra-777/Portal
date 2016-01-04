@@ -24,13 +24,25 @@ angular
 		            }
 		        }
 		    });
+
 		stateProvider.
 			state('admin', {
 				url: '/admin',
 				views: {
 					main: {
-						templateUrl: '/application/admin/admin.view.html',
+						templateUrl: '/application/admin/admin.update.view.html',
 						controller: 'adminController as vm'
+					}
+				}
+			});
+
+		stateProvider.
+			state('admin-update', {
+				url: '/admin-update',
+				views: {
+					main: {
+						templateUrl: '/application/admin/update/admin.update.view.html',
+						controller: 'adminUpdateController as vm'
 					}
 				}
 			});
