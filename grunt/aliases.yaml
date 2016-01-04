@@ -13,6 +13,7 @@ development:
   tasks:
     - 'concurrent:developmentFirst'
     - 'concurrent:developmentSecond'
+    - 'concurrent:developmentThird'
     - image
 
 devimg:

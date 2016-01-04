@@ -11,7 +11,7 @@ module.exports = {
     },
 
     dist: {
-        src: ['client/application/config.js', 'client/application/application.js', 'client/application/*/*.module.js', 'client/application/*/**/*.js'],
+        src: ['client/application/config.js', 'client/application/application.js', 'client/application/**/*.module.js', 'client/application/*/**/*.js'],
         dest: 'client/dist/application.js'
     }
 

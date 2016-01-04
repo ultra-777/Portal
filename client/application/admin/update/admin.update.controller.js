@@ -1,7 +1,7 @@
 ﻿'use strict';
 
 angular
-    .module('update')
+    .module('admin-update')
     .controller('adminUpdateController', [
         '$scope',
         '$rootScope',

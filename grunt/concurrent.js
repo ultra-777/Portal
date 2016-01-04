@@ -16,6 +16,9 @@ module.exports = {
         ,'less:development'
         //,'copy'
     ],
+    developmentThird: [
+        'concat'
+    ],
 
     productionZero: [
         'clean:productionZero'

@@ -1,3 +1,3 @@
 ﻿'use strict';
 
-ApplicationConfiguration.registerModule('update');
+ApplicationConfiguration.registerModule('admin-update');
