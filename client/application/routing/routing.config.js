@@ -21,6 +21,8 @@ angular
 		            main: {
 		                templateUrl: '/application/home/home.view.html',
 						controller: 'homeController as vm'
+						//templateUrl: '/application/admin/repository/admin.repository.view.html',
+						//controller: 'adminRepositoryController as vm'
 		            }
 		        }
 		    });
@@ -30,7 +32,7 @@ angular
 				url: '/admin',
 				views: {
 					main: {
-						templateUrl: '/application/admin/admin.update.view.html',
+						templateUrl: '/application/admin/admin.view.html',
 						controller: 'adminController as vm'
 					}
 				}
@@ -43,6 +45,17 @@ angular
 					main: {
 						templateUrl: '/application/admin/update/admin.update.view.html',
 						controller: 'adminUpdateController as vm'
+					}
+				}
+			});
+
+		stateProvider.
+			state('admin-repository', {
+				url: '/admin-repository',
+				views: {
+					main: {
+						templateUrl: '/application/admin/repository/admin.repository.view.html',
+						controller: 'adminRepositoryController as vm'
 					}
 				}
 			});

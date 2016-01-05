@@ -1,6 +1,3 @@
-/**
- * Created by Andrey on 25.12.2014.
- */
 
 var config = require('./config');
 var _users = new Object();

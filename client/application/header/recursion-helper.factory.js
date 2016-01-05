@@ -1,7 +1,3 @@
-/**
- * Created by Andrey on 10.11.2015.
- */
-
 'use strict';
 
 angular

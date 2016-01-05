@@ -1,105 +1,50 @@
 ﻿'use strict';
 
 angular
-    .module('admin-update')
-    .controller('adminUpdateController', [
+    .module('admin-repository')
+    .controller('adminRepositoryController', [
         '$scope',
         '$rootScope',
         '$timeout',
         '$location',
         '$window',
-        'adminUpdateService',
-function (scope, rootScope, timeout, location, window, adminService) {
+        'adminRepositoryService',
+function (scope, rootScope, timeout, location, window, data) {
 
     var vm = this;
-    vm.data = 'admin data';
-    vm.account = null;
-    vm.result = null;
-    vm.pull = pull;
-    vm.install = install;
-    vm.build = build;
-    vm.restart = restart;
-    vm.isOperating = false;
+    vm.onItem = onItem;
+    vm.repository = null;
+    vm.repositories = [];
 
-    function pull(){
-        vm.isOperating = true;
-        vm.result = null;
-        adminService
-            .pull()
-            .then(function(result){
-                    vm.result = result;
-                    vm.isOperating = false;
-                },
-                function(err){
-                    vm.result = err;
-                    vm.isOperating = false;
-                });
+    function onItem(item){
+        var toSelect = !item.isSelected;
+        var targetRepository = null;
+        angular.forEach(vm.repositories, function(repository, key){
+            if (toSelect) {
+                var isSelected = (item.id == repository.id);
+                repository.isSelected = isSelected;
+                if (isSelected)
+                    targetRepository = repository;
+            }
+            else
+                repository.isSelected = false;
+        });
+        if (vm.repository && vm.repository !== targetRepository)
+            vm.repository.cancel();
+        vm.repository = targetRepository;
     }
-
-    function install(){
-        vm.isOperating = true;
-        vm.result = null;
-        adminService
-            .install()
-            .then(function(result){
-                    vm.result = result;
-                    vm.isOperating = false;
-                },
-                function(err){
-                    vm.result = err;
-                    vm.isOperating = false;
-                });
-    }
-
-    function build(){
-        vm.isOperating = true;
-        vm.result = null;
-        adminService
-            .build()
-            .then(function(result){
-                    vm.result = result;
-                    vm.isOperating = false;
-                },
-                function(err){
-                    vm.result = err;
-                    vm.isOperating = false;
-                });
-    }
-
-    function restart(){
-        vm.isOperating = true;
-        vm.result = null;
-        adminService
-            .restart()
-            .then(function(result){
-                    vm.result = result;
-                    vm.isOperating = false;
-                },
-                function(err){
-                    vm.result = err;
-                    vm.isOperating = false;
-                });
-    }
-
 
     function initialize(){
 
+        data.getRepositories()
+            .then(
+                function(result){
+                    vm.repositories = result;
+                },
+                function(err){
 
-        adminService
-            .getAccountInfo()
-            .then(function(result){
-                vm.account = result;
-                var prefix = '::ffff:';
-                var ipCandidate = (result.ip) ? result.ip.toString() : '';
-                var ip = ((ipCandidate.indexOf(prefix) > -1) ? ipCandidate.substring(prefix.length, ipCandidate.length) : ipCandidate);
-                if (ip)
-                    vm.account.ip = ip;
-                if (result.host)
-                    vm.account.host = result.host;
-            }, function(err){
-                var q = 99;
-            });
-
+                }
+            );
     }
 
     initialize();

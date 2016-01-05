@@ -1,3 +1,3 @@
 ﻿'use strict';
 
-ApplicationConfiguration.registerModule('admin-update');
+ApplicationConfiguration.registerModule('admin-repository');

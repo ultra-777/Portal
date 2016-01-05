@@ -1,9 +1,3 @@
-/**
- * Created by Andrey on 12.03.2015.
- */
-
-
-
 
 var userNames = (function () {
     var names = {};

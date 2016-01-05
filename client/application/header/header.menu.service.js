@@ -15,7 +15,8 @@ angular
 				signup: 1,
 				signin: 2,
 				signout: 3,
-				adminUpdate: 4
+				adminUpdate: 4,
+				adminRepository: 5
 			};
 
 			function menuItem(){
@@ -125,6 +126,9 @@ angular
 					case vm.menuKeys.adminUpdate: // admin-update
 						state.go('admin-update');
 						break;
+					case vm.menuKeys.adminRepository: // admin-repository
+						state.go('admin-repository');
+						break;
 					default:
 						return;
 				}
@@ -151,7 +155,7 @@ angular
 					if (isAdmin){
 						var adminMenuItem = vm.menu.addItem(null, null, 'Admin');
 						adminMenuItem.addItem(vm.menuKeys.adminUpdate, onAction, 'Update');
-
+						adminMenuItem.addItem(vm.menuKeys.adminRepository, onAction, 'Repository');
 					}
 
 					if (account.accountName) {

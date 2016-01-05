@@ -1,6 +1,4 @@
-/**
- * Created by Andrey on 13.12.2014.
- */
+
 "use strict";
 
 function model(sequelize, DataTypes) {

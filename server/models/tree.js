@@ -1,6 +1,3 @@
-/**
- * Created by Andrey on 08.01.2015.
- */
 
 var fs = require('fs');
 var db = require('./storage/db');
