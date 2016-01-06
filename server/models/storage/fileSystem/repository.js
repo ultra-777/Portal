@@ -1,6 +1,7 @@
 "use strict";
 
 var fs = require('fs');
+var db = require('../db');
 var config = require('../../../config/config');
 
 function model(sequelize, DataTypes) {
@@ -10,6 +11,7 @@ function model(sequelize, DataTypes) {
             "repository",
             {
                 id: { type: DataTypes.BIGINT, autoIncrement: true, primaryKey: true, allowNull: false },
+                name: { type: DataTypes.STRING(256), unique: true, allowNull: false },
                 location: { type: DataTypes.STRING(2048) },
                 isOpen: { type: DataTypes.BOOLEAN, defaultValue: false },
                 childFilesLimit: { type: DataTypes.BIGINT, allowNull: false },
@@ -23,7 +25,185 @@ function model(sequelize, DataTypes) {
                 schema: "fileSystem",
 
                 // define the table's name
-                tableName: 'Repositories'
+                tableName: 'Repositories',
+
+
+                classMethods: {
+
+                    findInstance: function(name, callback/*function(instance, error)*/) {
+                        var repositorySchema = db.getObject('repository', 'fileSystem');
+                        repositorySchema
+                            .findAll({where: (name ? {name: name} : true )})
+                            .then(function(instances) {
+                                callback && callback (instances, null);
+                            })
+                            .catch(function(err){
+                                callback && callback (null, err);
+                            });
+                    },
+
+                    get: function(id, callback/*function(instance, error)*/) {
+                        var repositorySchema = db.getObject('repository', 'fileSystem');
+                        repositorySchema
+                            .find({where: {id: id}})
+                            .then(function(instance) {
+                                callback && callback (instance, null);
+                            })
+                            .catch(function(err){
+                                callback && callback (null, err);
+                            });
+                    },
+
+                    create: function (name, location, isOpen, callback) {
+                        fs.stat(location, function(err, stat) {
+                            if (err) {
+                                callback && callback(null, err);
+                            }
+                            else if (stat.isDirectory()) {
+                                var repositorySchema = db.getObject('repository', 'fileSystem');
+                                repositorySchema
+                                    .find({
+                                        where: {name: name}
+                                    })
+                                    .then(function (result) {
+                                        if (result)
+                                            callback && callback(null, 'Repository already exists');
+                                        else {
+                                            sequelize
+                                                .transaction({
+                                                    autocommit: 'off',
+                                                    isolationLevel: 'REPEATABLE READ'
+                                                })
+                                                .then(function (t) {
+                                                    var newRepository =
+                                                        repositorySchema
+                                                            .build({
+                                                                    name: name,
+                                                                    location: location,
+                                                                    isOpen: isOpen,
+                                                                    childFilesLimit: config.repositoryChildFilesLimit,
+                                                                    childFoldersLimit: config.repositoryChildFoldersLimit
+                                                                },
+                                                                {transaction: t});
+
+                                                    newRepository
+                                                        .save({transaction: t})
+                                                        .catch(function (err) {
+                                                            t.rollback();
+                                                            callback && callback(null, err);
+                                                        })
+                                                        .then(function (newInstance) {
+                                                            t.commit()
+                                                                .catch(function (err) {
+                                                                    callback && callback(null, err);
+                                                                })
+                                                                .then(function () {
+                                                                    callback && callback(newInstance, null);
+                                                                });
+                                                        });
+                                                })
+                                            }})
+                                            .catch(function (err) {
+                                                callback && callback(null, err);
+                                    });
+
+                            }
+                        });
+                    },
+
+                    delete: function (id, callback/*function(instance, error)*/) {
+
+                        var repositorySchema = db.getObject('repository', 'fileSystem');
+                        repositorySchema
+                            .find({where: {id: id}})
+                            .then(function(instance) {
+
+                                if (instance == null){
+                                    callback && callback(false, null);
+                                }
+                                else {
+
+                                    sequelize
+                                        .transaction({
+                                            autocommit: 'off',
+                                            isolationLevel: 'REPEATABLE READ'})
+                                        .then(function (t) {
+                                            instance
+                                                .destroy({transaction: t})
+                                                .catch(function (err) {
+                                                    t.rollback();
+                                                    callback && callback(false, err);
+                                                })
+                                                .then(function (affectedRows) {
+                                                    t.commit();
+                                                    callback && callback(true, null);
+                                                });
+                                        });
+                                }
+                            })
+                            .catch(function(err){
+                                callback && callback (null, err);
+                            });
+                    },
+
+                    update: function (id, name, location, isOpen, callback/*function(instance, error)*/) {
+
+                       fs.stat(location, function(err, stat) {
+                           if (err){
+                               callback && callback(null, err);
+                           }
+                           else if (stat.isDirectory()){
+
+                                var repositorySchema = db.getObject('repository', 'fileSystem');
+                                repositorySchema
+                                    .find({where: {id: id}})
+                                    .then(function(instance) {
+                                        if (instance){
+                                            instance.name = name;
+                                            instance.location = location;
+                                            instance.isOpen = isOpen;
+
+                                            sequelize
+                                                .transaction({
+                                                    autocommit: 'off',
+                                                    isolationLevel: 'REPEATABLE READ'})
+                                                .then(function (t) {
+                                                    instance.save({
+                                                            transaction: t
+                                                        })
+                                                        .then(function (affectedRows) {
+                                                            t.commit()
+                                                                .then(function () {
+                                                                    callback && callback(instance, null);
+                                                                })
+                                                                .catch(function (err) {
+                                                                    callback && callback(null, err);
+                                                                });
+
+                                                        })
+                                                        .catch(function (err) {
+                                                            t.rollback();
+                                                            callback && callback(null, err);
+                                                        });
+                                                });
+
+
+                                        }
+                                        else {
+                                            callback && callback(null, null);
+                                        }
+                                    })
+                                    .catch(function(err){
+                                        callback && callback (null, err);
+                                    });
+
+                            }
+                            else {
+                                callback && callback(null, 'Invalid path: ' + (location ? location : ''));
+                            }
+                        });
+                    }
+                }
             }
         );
 
@@ -32,7 +212,8 @@ function model(sequelize, DataTypes) {
 
 function exec(executeQueryHandler){
 
-    var repositoryPath = config.repositoryPath;
+    var repositoryName = config.fileRepositoryName;
+    var repositoryPath = config.fileRepositoryDefaultPath;
 
     if (!repositoryPath)
         return;
@@ -45,7 +226,11 @@ function exec(executeQueryHandler){
 
     var query =
         'insert into "fileSystem"."Repositories" ' +
-        '("location", "isOpen", "childFilesLimit", "childFoldersLimit", "created") select'+
+        '("name", "location", "isOpen", "childFilesLimit", "childFoldersLimit", "created") select '+
+        '\'' +
+        repositoryName +
+        '\'' +
+        ', ' +
         '\'' +
         repositoryPath +
         '\'' +
