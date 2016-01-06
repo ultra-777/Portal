@@ -1,4 +1,5 @@
 CREATE OR REPLACE FUNCTION "fileSystem"."addFile"(
+    IN repositoryName character varying(256),
     IN name character varying(2048),
     IN extension character varying(128),
     IN size bigint)
@@ -25,7 +26,10 @@ BEGIN
 	v_repository = (
 		select id
 		from "fileSystem"."Repositories"
-		where "isOpen" = true order by id 
+		where
+		    "isOpen" = true
+		    and ((repositoryName is null) or ("name" = repositoryName))
+		order by id
 		limit 1);
 
 	if (v_repository is null) then

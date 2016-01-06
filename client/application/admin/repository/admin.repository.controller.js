@@ -15,6 +15,9 @@ function (scope, rootScope, timeout, location, window, data) {
     vm.onItem = onItem;
     vm.repository = null;
     vm.repositories = [];
+    vm.add = addNew;
+    vm.onNewRepository = onNewRepository;
+    vm.remove = onRemove;
 
     function onItem(item){
         var toSelect = !item.isSelected;
@@ -34,15 +37,45 @@ function (scope, rootScope, timeout, location, window, data) {
         vm.repository = targetRepository;
     }
 
+    function addNew(){
+        vm.repository = data.initNewRepository(vm.onNewRepository);
+    }
+
+    function onNewRepository(instance) {
+        vm.repositories.push(instance);
+        onItem(instance);
+    }
+
+    function onRemove(id){
+        if (id) {
+            data.removeRepository(id)
+                .then(
+                    function (result) {
+                        if (result){
+                            for (var i =0; i < vm.repositories.length; i++)
+                                if (vm.repositories[i].id == id) {
+                                    vm.repositories.splice(i, 1);
+                                    vm.repository = null;
+                                    break;
+                                }
+                        }
+                    },
+                    function (err) {
+                        var q = 0;
+                    }
+                );
+        }
+    }
+
     function initialize(){
 
-        data.getRepositories()
+        data.findRepositories()
             .then(
                 function(result){
                     vm.repositories = result;
                 },
                 function(err){
-
+                    var q = 0;
                 }
             );
     }

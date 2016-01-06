@@ -42,11 +42,11 @@ exports.root = function(req, res, next) {
     checkAuthorization(req, res, function(){
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.send(500, error);
+                res.send(500).send({ error: error, message: error.message });
             else{
                 instance.getRoot(function(folder, error){
                     if (error)
-                        res.send(500, error);
+                        res.send(500).send({ error: error, message: error.message });
                     else
                         res.send(folder.toJson());
                 });
@@ -59,11 +59,11 @@ exports.newFolder = function(req, res, next) {
     checkAuthorization(req, res, function(){
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.send(500, error);
+                res.send(500).send({ error: error, message: error.message });
             else{
                 instance.newFolder(req.body.id, req.body.name, function(folder, error){
                     if (error)
-                        res.send(500, error);
+                        res.send(500).send({ error: error, message: error.message });
                     else
                         res.send(folder.toJson());
                 });
@@ -76,11 +76,11 @@ exports.delete = function(req, res, next) {
     checkAuthorization(req, res, function(){
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.send(500, error);
+                res.send(500).send({ error: error, message: error.message });
             else{
                 instance.dropNode(req.body.id, function(result, error){
                     if (error)
-                        res.send(500, error);
+                        res.send(500).send({ error: error, message: error.message });
                     else{
                         res.jsonp(result);
                     }
@@ -94,11 +94,11 @@ exports.rename = function(req, res, next) {
     checkAuthorization(req, res, function(){
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.send(500, error);
+                res.send(500).send({ error: error, message: error.message });
             else{
                 instance.rename(req.body.id, req.body.newName, function(result, error){
                     if (error)
-                        res.send(500, error);
+                        res.send(500).send({ error: error, message: error.message });
                     else{
                         res.jsonp(result);
                     }
@@ -112,11 +112,11 @@ exports.download = function(req, res, next) {
     checkAuthorization(req, res, function(){
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.send(500, error);
+                res.send(500).send({ error: error, message: error.message });
             else{
                 instance.downloadFile(req.query.id, function(fileName, stream, error){
                     if (error)
-                        res.send(500, error);
+                        res.send(500).send({ error: error, message: error.message });
                     else{
                         res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
                         res.setHeader('Content-type', 'application/octet-stream');
@@ -137,9 +137,9 @@ exports.initBlob = function(req, res, next){
                 req.body.totalSize,
                 req.body.chunkSize,
                 req.user,
-                function(blob, err){
-                    if (err)
-                        res.send(500, err);
+                function(blob, error){
+                    if (error)
+                        res.send(500).send({ error: error, message: error.message });
                     else{
                         if (blob)
                             res.jsonp({ id: blob.id });
@@ -174,9 +174,9 @@ exports.addBlobChunk = function(req, res, next){
                 .get(
                     req.body.blobId,
                     null,
-                    function(blobInstance, err) {
-                        if (err)
-                            res.send(500, err);
+                    function(blobInstance, error) {
+                        if (error)
+                            res.send(500).send({ error: error, message: error.message });
                         else {
                             if (blobInstance) {
 
@@ -269,9 +269,9 @@ exports.releaseBlob = function(req, res, next){
             .get(
             req.body.blobId,
             null,
-            function (blobInstance, err) {
-                if (err)
-                    res.send(500, err);
+            function (blobInstance, error) {
+                if (error)
+                    res.send(500).send({ error: error, message: error.message });
                 else {
                     if (blobInstance) {
 
@@ -309,9 +309,9 @@ exports.uploadFile = function(req, res, next){
 
             var nodeSchema = db.getObject('node', 'fileSystem');
             nodeSchema
-                .get(parentNodeId, null, function(parentNode, err){
-                    if (err)
-                        res.send(500, err);
+                .get(parentNodeId, null, function(parentNode, error){
+                    if (error)
+                        res.send(500).send({ error: error, message: error.message });
                     else{
                         if (parentNode){
                             dataLength = part.byteCount;
@@ -322,9 +322,9 @@ exports.uploadFile = function(req, res, next){
                                     part.byteCount,
                                     part.byteCount,
                                     req.user,
-                                    function(blob, err){
-                                        if (err)
-                                            res.send(500, err);
+                                    function(blob, error){
+                                        if (error)
+                                            res.send(500).send({ error: error, message: error.message });
                                         else{
                                             repositoryBlob = blob;
                                             repositoryBlob.containerNode = parentNode;
@@ -366,10 +366,10 @@ exports.uploadFile = function(req, res, next){
     function release(res){
         if (repositoryBlob) {
             _blobSchema
-                .dropInstance(repositoryBlob, function (newNode, err) {
+                .dropInstance(repositoryBlob, function (newNode, error) {
                     if (res) {
-                        if (err)
-                            res.send(500, err);
+                        if (error)
+                            res.send(500).send({ error: error, message: error.message });
                         else
                             res.jsonp(treeImpl.getFileInfo(newNode));
                     }
