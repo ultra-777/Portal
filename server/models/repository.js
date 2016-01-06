@@ -1,246 +1,75 @@
 
 var fs = require('fs');
 var db = require('./storage/db');
-var exp = require('./explorer.js');
-var config = require('../config/config');
+var util = require('./jsonImpl.js');
 
-var getFileInfo = function(node){
-    var file = new exp.File();
-    file.Id = node.id;
-    file.Parent = node.parentId;
-    file.Name = node.name;
-    file.Size = node.file.size;
-    return file;
+
+function repositoryInstance(source) {
+    this.id = source.id,
+    this.name = source.name,
+    this.location = source.location,
+    this.isOpen = source.isOpen,
+    this.childFilesLimit = source.childFilesLimit,
+    this.childFoldersLimit = source.childFoldersLimit,
+    this.created = source.created
 }
 
-getInstance = function(id, user, callback/*function(instance, error)*/){
+repositoryInstance.prototype = new util.JsonImpl();
 
-    var instance = function(treeInstance){
+function findInstances (name, callback/*function(instance, error)*/) {
 
-        var tree = treeInstance;
-
-        this.getRoot = function(callback/*function(folder, error)*/){
-
-            var nodeSchema = db.getObject('node', 'fileSystem');
-            nodeSchema
-                .find(
-                    {
-                        treeId: tree.id,
-                        isContainer: true,
-                        parentId: null
-                    }
-                )
-                .catch(function(err){
-                    callback && callback (null, err);
-                })
-                .then(function(node) {
-                    if (node)
-                        getFolderInfo(node, true, callback);
-                    else {
-                        var newNode = nodeSchema.build();
-                        newNode.treeId = tree.id;
-                        newNode.isContainer = true;
-                        newNode.name = config.rootAlias;
-                        newNode
-                            .save()
-                            .catch(function(err){
-                                callback && callback(null, err);
-                            })
-                            .then(function(){
-                                getFolderInfo(newNode, true, callback);
-                            });
-                    }
-                });
-        };
-
-        this.getFolder = function(nodeId, callback/*function(folder, error)*/) {
-            var nodeSchema = db.getObject('node', 'fileSystem');
-            nodeSchema
-                .find({where: {id: nodeId}})
-                .then(function(node) {
-                    getFolderInfo(node, true, callback);
-                })
-                .catch(function(err){
-                    callback && callback (null, err);
-                });
-        }
-
-        var getFolderInfo = function(node, withChildren, callback/*function(folder, error)*/) {
-
-            var folder = new exp.Folder();
-            folder.Name = node.name;
-            folder.Id = node.id
-            folder.Parent = node.parentId;
-
-            if (withChildren){
-                var nodeSchema = db.getObject('node', 'fileSystem');
-                var fileSchema = db.getObject('file', 'fileSystem');
-                nodeSchema
-                    .findAll(
-                    {
-                        where: {treeId: tree.id, parentId: node.id},
-                        include: [{model: fileSchema, as: 'file'}]
-                    })
-                    .catch(function(err){
-                        callback && callback (null, err);
-                    })
-                    .then(function(children) {
-                        if (children) {
-                            for (var i in children){
-                                var child = children[i];
-                                if (child.isContainer) {
-                                    getFolderInfo(child, false, function (childFolder, err) {
-                                        folder.Children.push(childFolder);
-                                    });
-                                }
-                                else{
-                                    folder.Children.push(getFileInfo(child));
-                                }
-                            }
-                            callback && callback(folder, null);
-                        }
-                    });
-                return;
-            }
-
-            callback && callback(folder, null);
-        }
-
-        this.newFolder = function(parentFolderId, name, callback/*function(folder, error)*/){
-            var nodeSchema = db.getObject('node', 'fileSystem');
-            nodeSchema
-                .find(
-                {
-                    treeId: tree.id,
-                    isContainer: true,
-                    id: parentFolderId
-                })
-                .catch(function(err){
-                    callback && callback (null, err);
-                })
-                .then(function(parentNode) {
-                    if (parentNode){
-                        var newNode = nodeSchema.build();
-                        newNode.treeId = tree.id;
-                        newNode.isContainer = true;
-                        newNode.name = name;
-                        newNode.parentId = parentFolderId;
-                        newNode
-                            .save()
-                            .catch(function(err){
-                                callback && callback(null, err);
-                            })
-                            .then(function(){
-                                getFolderInfo(newNode, true, callback);
-                            })
-                    }
-                    else
-                        callback && callback(null, null);
-                });
-        };
-
-        this.downloadFile = function(nodeId, callback/*function(fileName, stream, error)*/){
-
-            var nodeSchema = db.getObject('node', 'fileSystem');
-
-            nodeSchema
-                .get(
-                    nodeId,
-                    null,
-                    function(node, err){
-                        if (err)
-                            callback && callback(null, err);
-                        else{
-                            if (node && node.file){
-                                var location = node.file.getLocation();
-                                var stream = fs.createReadStream(location);
-                                callback && callback(node.file.name, stream, null);
-                            }
-                            else
-                                callback && callback(null, 'Not found');
-                        }
-                    }
-            );
-        };
-
-        this.dropNode = function(nodeId, callback/*function(succeeded, error)*/){
-
-            var nodeSchema = db.getObject('node', 'fileSystem');
-            nodeSchema
-                .dropById(nodeId, function(succeeded, error){
-                    callback && callback(succeeded, error);
-                });
-        };
-
-        this.rename = function(nodeId, newName, callback/*function(succeeded, error)*/){
-
-            var nodeSchema = db.getObject('node', 'fileSystem');
-            nodeSchema
-                .rename(nodeId, newName, function(succeeded, error){
-                    callback && callback(succeeded, error);
-                });
-        };
-    };
-
-
-    var treeSchema = db.getObject('tree', 'fileSystem');
     var repositorySchema = db.getObject('repository', 'fileSystem');
-    var promise =
-        id ?
-            treeSchema
-                .find({
-                    where: {id: id, ownerId: user.id},
-                    include: [
-                        { model: repositorySchema, as: 'repository' }
-                    ]
-                }) :
-            treeSchema
-                .find({
-                    where: {ownerId: user.id},
-                    include: [
-                        { model: repositorySchema, as: 'repository' }
-                    ]
-                });
-    promise
-        .then(function(tree){
-            if (tree)
-                callback && callback (new instance(tree));
-            else{
-
-                repositorySchema
-                    .find({
-                        where: ['"isOpen" = ?', true]
-                    })
-                    .catch(function(err){
-                        callback && callback (null, err);
-                    })
-                    .then(function(repository) {
-                        if (repository){
-                            var newTree = treeSchema.build();
-                            newTree.repositoryId = repository.id;
-                            newTree.ownerId = user.id;
-                            newTree
-                                .save()
-                                .then(function(){
-                                    callback && callback (new instance(newTree));
-                                })
-                                .catch(function(err){
-                                    callback && callback (null, err);
-                                })
-                        }
-                        else
-                            callback && callback (null);
-                    });
-
+    repositorySchema.findInstance(name, function(instances, error){
+        if (error){
+            callback && callback (null, error);
+        }
+        else {
+            if (instances == null){
+                callback && callback (null, null);
             }
-        })
-        .catch(function(err){
-            callback && callback (null, err);
-        });
+            else {
+                var result = [];
+                instances.forEach(function(instance){
+                    result.push( new repositoryInstance(instance));
+                });
+                callback && callback (result, error);
+            }
+        }
+    });
+}
 
-};
+function getInstance (id, callback/*function(instance, error)*/) {
+    var repositorySchema = db.getObject('repository', 'fileSystem');
+    repositorySchema.get(id, function(instance, error) {
+        callback && callback ((instance ? new repositoryInstance(instance) : null), error);
+    });
+}
+
+function updateInstance (id, name, location, isOpen, callback/*function(instance, error)*/) {
+
+    var repositorySchema = db.getObject('repository', 'fileSystem');
+    repositorySchema.update(id, name, location, isOpen, function(instance, error){
+        callback && callback ((instance ? new repositoryInstance(instance) : null), error);
+    });
+}
+
+function createInstance (name, location, isOpen, callback/*function(instance, error)*/) {
+    var repositorySchema = db.getObject('repository', 'fileSystem');
+    repositorySchema.create(name, location, isOpen, function(instance, error){
+        callback && callback ((instance ? new repositoryInstance(instance) : null), error);
+    });
+}
+
+function deleteInstance (id, callback/*function(instance, error)*/) {
+    var repositorySchema = db.getObject('repository', 'fileSystem');
+    repositorySchema.delete(id, callback);
+}
+
 
 module.exports = {
-    getInstance: getInstance,
-    getFileInfo: getFileInfo
+    find: findInstances,
+    get: getInstance,
+    update: updateInstance,
+    create: createInstance,
+    delete: deleteInstance
 };
