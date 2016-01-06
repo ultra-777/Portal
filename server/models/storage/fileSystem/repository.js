@@ -60,53 +60,66 @@ function model(sequelize, DataTypes) {
                                 callback && callback(null, err);
                             }
                             else if (stat.isDirectory()) {
-                                var repositorySchema = db.getObject('repository', 'fileSystem');
-                                repositorySchema
-                                    .find({
-                                        where: {name: name}
-                                    })
-                                    .then(function (result) {
-                                        if (result)
-                                            callback && callback(null, 'Repository already exists');
-                                        else {
-                                            sequelize
-                                                .transaction({
-                                                    autocommit: 'off',
-                                                    isolationLevel: 'REPEATABLE READ'
-                                                })
-                                                .then(function (t) {
-                                                    var newRepository =
-                                                        repositorySchema
-                                                            .build({
-                                                                    name: name,
-                                                                    location: location,
-                                                                    isOpen: isOpen,
-                                                                    childFilesLimit: config.repositoryChildFilesLimit,
-                                                                    childFoldersLimit: config.repositoryChildFoldersLimit
-                                                                },
-                                                                {transaction: t});
 
-                                                    newRepository
-                                                        .save({transaction: t})
-                                                        .catch(function (err) {
-                                                            t.rollback();
-                                                            callback && callback(null, err);
+                                fs.readdir(location, function (err, files) {
+                                    if (err) {
+                                        callback && callback(null, err);
+                                    }
+                                    else if (files && files.length > 0) {
+                                        callback && callback(null, {message: 'The folder is not empty: ' + location});
+                                    }
+                                    else {
+
+
+                                        var repositorySchema = db.getObject('repository', 'fileSystem');
+                                        repositorySchema
+                                            .find({
+                                                where: {name: name}
+                                            })
+                                            .then(function (result) {
+                                                if (result)
+                                                    callback && callback(null, 'Repository already exists');
+                                                else {
+                                                    sequelize
+                                                        .transaction({
+                                                            autocommit: 'off',
+                                                            isolationLevel: 'REPEATABLE READ'
                                                         })
-                                                        .then(function (newInstance) {
-                                                            t.commit()
+                                                        .then(function (t) {
+                                                            var newRepository =
+                                                                repositorySchema
+                                                                    .build({
+                                                                            name: name,
+                                                                            location: location,
+                                                                            isOpen: isOpen,
+                                                                            childFilesLimit: config.repositoryChildFilesLimit,
+                                                                            childFoldersLimit: config.repositoryChildFoldersLimit
+                                                                        },
+                                                                        {transaction: t});
+
+                                                            newRepository
+                                                                .save({transaction: t})
                                                                 .catch(function (err) {
+                                                                    t.rollback();
                                                                     callback && callback(null, err);
                                                                 })
-                                                                .then(function () {
-                                                                    callback && callback(newInstance, null);
+                                                                .then(function (newInstance) {
+                                                                    t.commit()
+                                                                        .catch(function (err) {
+                                                                            callback && callback(null, err);
+                                                                        })
+                                                                        .then(function () {
+                                                                            callback && callback(newInstance, null);
+                                                                        });
                                                                 });
-                                                        });
-                                                })
-                                            }})
+                                                        })
+                                                }
+                                            })
                                             .catch(function (err) {
                                                 callback && callback(null, err);
-                                    });
-
+                                            });
+                                    }
+                                });
                             }
                         });
                     },
@@ -148,60 +161,76 @@ function model(sequelize, DataTypes) {
 
                     update: function (id, name, location, isOpen, callback/*function(instance, error)*/) {
 
-                       fs.stat(location, function(err, stat) {
-                           if (err){
-                               callback && callback(null, err);
-                           }
-                           else if (stat.isDirectory()){
 
-                                var repositorySchema = db.getObject('repository', 'fileSystem');
-                                repositorySchema
-                                    .find({where: {id: id}})
-                                    .then(function(instance) {
-                                        if (instance){
-                                            instance.name = name;
-                                            instance.location = location;
-                                            instance.isOpen = isOpen;
 
-                                            sequelize
-                                                .transaction({
-                                                    autocommit: 'off',
-                                                    isolationLevel: 'REPEATABLE READ'})
-                                                .then(function (t) {
-                                                    instance.save({
-                                                            transaction: t
+                        var repositorySchema = db.getObject('repository', 'fileSystem');
+                        repositorySchema
+                            .find({where: {id: id}})
+                            .then(function(instance) {
+                                if (instance){
+                                    fs.stat(location, function(err, stat) {
+                                        if (err){
+                                            callback && callback(null, err);
+                                        }
+                                        else if (stat.isDirectory()){
+
+                                            fs.readdir(location, function (err, files) {
+                                                if (err) {
+                                                    callback && callback(null, err);
+                                                }
+                                                else if ((instance.location != location) && files && (files.length > 0)) {
+                                                    callback && callback(null, {message: 'The folder is not empty: ' + location});
+                                                }
+                                                else {
+
+
+                                                    instance.name = name;
+                                                    instance.location = location;
+                                                    instance.isOpen = isOpen;
+
+                                                    sequelize
+                                                        .transaction({
+                                                            autocommit: 'off',
+                                                            isolationLevel: 'REPEATABLE READ'
                                                         })
-                                                        .then(function (affectedRows) {
-                                                            t.commit()
-                                                                .then(function () {
-                                                                    callback && callback(instance, null);
+                                                        .then(function (t) {
+                                                            instance.save({
+                                                                    transaction: t
+                                                                })
+                                                                .then(function (affectedRows) {
+                                                                    t.commit()
+                                                                        .then(function () {
+                                                                            callback && callback(instance, null);
+                                                                        })
+                                                                        .catch(function (err) {
+                                                                            callback && callback(null, err);
+                                                                        });
+
                                                                 })
                                                                 .catch(function (err) {
+                                                                    t.rollback();
                                                                     callback && callback(null, err);
                                                                 });
-
-                                                        })
-                                                        .catch(function (err) {
-                                                            t.rollback();
-                                                            callback && callback(null, err);
                                                         });
-                                                });
 
+
+                                                }
+                                            });
 
                                         }
                                         else {
-                                            callback && callback(null, null);
+                                            callback && callback(null, 'Invalid path: ' + (location ? location : ''));
                                         }
-                                    })
-                                    .catch(function(err){
-                                        callback && callback (null, err);
                                     });
 
-                            }
-                            else {
-                                callback && callback(null, 'Invalid path: ' + (location ? location : ''));
-                            }
-                        });
+                                }
+                                else {
+                                    callback && callback(null, null);
+                                }
+                            })
+                            .catch(function(err){
+                                callback && callback (null, err);
+                            });
                     }
                 }
             }
