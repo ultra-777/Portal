@@ -2,10 +2,10 @@
 
 module.exports = function(app) {
 	// Root routing
-	var update = require('../controllers/update');
-	app.route('/update/pull').post(update.pull);
-	app.route('/update/install').post(update.install);
-	app.route('/update/build').post(update.build);
-	app.route('/update/restart').post(update.restart);
-
+	var repository = require('../controllers/repository');
+	app.route('/repository/find').post(repository.find);
+	app.route('/repository/get').post(repository.get);
+	app.route('/repository/update').post(repository.update);
+	app.route('/repository/create').post(repository.create);
+	app.route('/repository/delete').post(repository.delete);
 };
