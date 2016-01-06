@@ -18,10 +18,11 @@ angular
 		vm.onNewInstanceCreated = onNewInstanceCreated;
 		vm.removeRepository = removeRepository;
 
-		function repositoryItem(source, newInstanceHandler){
+		function repositoryItem(source, newInstanceHandler, cancelNewInstanceHandler){
 			this._isSelected = false;
 			this.apply(source);
 			this.newInstanceHandler = newInstanceHandler;
+			this.cancelNewInstanceHandler = cancelNewInstanceHandler;
 		}
 
 		repositoryItem.prototype = {
@@ -93,14 +94,15 @@ angular
 							});
 					}
 					else {
-						vm.repository = null;
+						if (this.cancelNewInstanceHandler)
+							this.cancelNewInstanceHandler(this);
 					}
 				}
 			}
 		}
 
-		function initNewRepository(newRepositoryHandler){
-			return new repositoryItem(null, newRepositoryHandler);
+		function initNewRepository(newRepositoryHandler, cancelNewInstanceHandler){
+			return new repositoryItem(null, newRepositoryHandler, cancelNewInstanceHandler);
 		}
 
 		function removeRepository(id){

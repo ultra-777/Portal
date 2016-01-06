@@ -2,34 +2,41 @@
 var exec = require('child_process').exec;
 
 exports.pull = function(req, res) {
-    execute(
-        'git pull',
-        function(callback){
-            res.jsonp(callback);
-        });
+    checkAuthorization(req, res, function() {
+        execute(
+            'git pull',
+            function (callback) {
+                res.jsonp(callback);
+            });
+    });
 };
 
 exports.install = function(req, res) {
-    execute('npm install',
-        function(callback){
-            res.jsonp(callback);
+    checkAuthorization(req, res, function() {
+        execute('npm install',
+            function (callback) {
+                res.jsonp(callback);
+            });
     });
 };
 
 exports.build = function(req, res) {
-    execute('grunt production',
-    function(callback){
-        res.jsonp(callback);
+    checkAuthorization(req, res, function() {
+        execute('grunt production',
+            function (callback) {
+                res.jsonp(callback);
+            });
     });
 };
 
 exports.restart = function(req, res) {
-    var line = 'reboot';
-    console.log(line);
-    execute(line,
-        function(callback1){
-            console.log(callback1);
-            res.jsonp(callback1);
+    checkAuthorization(req, res, function() {
+        var line = 'reboot';
+        execute(line,
+            function (callback1) {
+                console.log(callback1);
+                res.jsonp(callback1);
+            });
     });
 };
 
@@ -61,6 +68,26 @@ function execute(command, callback){
 
             callback(output);
         });
+}
+
+function checkAuthorization(req, res, callback/*function()*/){
+    var roles = (req.user && req.user.roles) ? req.user.roles : [];
+    var isAdmin = false;
+    var i = roles.length;
+    while (i--) {
+        var candidate = roles[i];
+        if (candidate && (candidate.name == 'admin')) {
+            isAdmin = true;
+            break;
+        }
+    }
+
+    if (isAdmin) {
+        callback && callback();
+    }
+    else {
+        res.status(401).send({message: 'User is not administrator'});
+    }
 }
 
 

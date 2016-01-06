@@ -16,7 +16,6 @@ function (scope, rootScope, timeout, location, window, data) {
     vm.repository = null;
     vm.repositories = [];
     vm.add = addNew;
-    vm.onNewRepository = onNewRepository;
     vm.remove = onRemove;
 
     function onItem(item){
@@ -38,12 +37,16 @@ function (scope, rootScope, timeout, location, window, data) {
     }
 
     function addNew(){
-        vm.repository = data.initNewRepository(vm.onNewRepository);
+        vm.repository = data.initNewRepository(onNewRepository, onCancelNewRepository);
     }
 
     function onNewRepository(instance) {
         vm.repositories.push(instance);
         onItem(instance);
+    }
+
+    function onCancelNewRepository(instance) {
+        vm.repository = null;
     }
 
     function onRemove(id){
