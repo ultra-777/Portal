@@ -12,15 +12,14 @@ angular
         rootScope.$on('$stateChangeStart',
             function (event, toState, toParams, fromState, fromParams) {
 
-                if (toState.data != undefined) {
-                    if (toState.data.noLogin != undefined && toState.data.noLogin) {
+                if (toState && toState.name == 'signout'){
+                    event.preventDefault();
+                    authentication.signout();
+                    state.go('home');
+                }
+
+                if (toState.data && toState.data.noLogin) {
                         // какие-то действия перед входом без авторизации
-                    }
-                    if (toState && toState.name == 'signout'){
-                        event.preventDefault();
-                        authentication.signout();
-                        state.go('home');
-                    }
                 } else {
                     if (window.sessionStorage.account) {
                         rootScope.account = account;

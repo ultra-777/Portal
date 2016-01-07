@@ -21,8 +21,6 @@ angular
 		            main: {
 		                templateUrl: '/application/home/home.view.html',
 						controller: 'homeController as vm'
-						//templateUrl: '/application/admin/repository/admin.repository.view.html',
-						//controller: 'adminRepositoryController as vm'
 		            }
 		        }
 		    });
@@ -93,6 +91,20 @@ angular
 				main: {
 					templateUrl: '/application/authentication/authentication.signup.view.html',
 					controller: 'authenticationSignupController as vm'
+				}
+			}
+		});
+
+		stateProvider.
+		state('explorer', {
+			url: '/explorer',
+			data: {
+				'noLogin': false
+			},
+			views: {
+				main: {
+					templateUrl: '/application/explorer/explorer.view.html',
+					controller: 'explorerController as vm'
 				}
 			}
 		});
