@@ -53,7 +53,7 @@
                             <table class="nodeTable" ng-cloak>
                                 <tr ng-repeat="child in vm.data.subfolders | orderBy:'name'">
                                     <td>
-                                        <explorer-tree-node-two data-node-promise="child.nodePromise" data-parent-node="$parent"></explorer-tree-node-two>
+                                        <explorer-tree-node data-node-promise="child.nodePromise" data-parent-node="$parent"></explorer-tree-node>
                                     </td>
                                 </tr>
                             </table>

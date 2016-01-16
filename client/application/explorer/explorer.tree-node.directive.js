@@ -1,6 +1,6 @@
 angular
     .module('explorer')
-        .directive('explorerTreeNodeTwo', [
+        .directive('explorerTreeNode', [
             '$compile',
             '$parse',
             '$document',
@@ -14,9 +14,9 @@ angular
             },
             restrict: 'EA',
 
-            templateUrl: 'application/explorer/explorer.tree-node2.view.html',
+            templateUrl: 'application/explorer/explorer.tree-node.view.html',
             replace: true,
-            controller: 'explorerTreeNodeTwoController',
+            controller: 'explorerTreeNodeController',
             controllerAs: 'vm',
             compile: function(element) {
                 return recursionHelper.compile(element, function(theScope, theElement, theAttrs, theController){
@@ -26,7 +26,7 @@ angular
 
                     vm.getController = function(target){
                         var elementQuery = angular.element(target);
-                        var controller = elementQuery.controller('explorerTreeNodeTwo');
+                        var controller = elementQuery.controller('explorerTreeNode');
                         return controller;
                     };
                     vm.applyChildPointerEvents = function (targetObj, enable) {
