@@ -19,10 +19,12 @@ angular
             controller: 'explorerTreeNodeController',
             controllerAs: 'vm',
             compile: function(element) {
+
                 return recursionHelper.compile(element, function(theScope, theElement, theAttrs, theController){
 
-                    var vm = this;
-                    vm.data = null;
+                    //var vm = this;
+                    var vm = theScope.vm;
+                    //vm.data = null;
 
                     vm.getController = function(target){
                         var elementQuery = angular.element(target);
