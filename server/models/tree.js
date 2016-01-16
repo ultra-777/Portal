@@ -5,11 +5,11 @@ var exp = require('./explorer.js');
 var config = require('../config/config');
 
 var getFileInfo = function(node){
-    var file = new exp.File();
-    file.Id = node.id;
-    file.Parent = node.parentId;
-    file.Name = node.name;
-    file.Size = node.file.size;
+    var file = new exp.file();
+    file.id = node.id;
+    file.parent = node.parentId;
+    file.name = node.name;
+    file.size = node.file.size;
     return file;
 }
 
@@ -63,14 +63,20 @@ getInstance = function(id, user, callback/*function(instance, error)*/){
                 .catch(function(err){
                     callback && callback (null, err);
                 });
+        };
+
+        this.moveChild = function(parentId, childId, callback /*function(result, error)*/ ){
+            var nodeSchema = db.getObject('node', 'fileSystem');
+            nodeSchema
+                .moveChild(parentId, childId, callback);
         }
 
         var getFolderInfo = function(node, withChildren, callback/*function(folder, error)*/) {
 
-            var folder = new exp.Folder();
-            folder.Name = node.name;
-            folder.Id = node.id
-            folder.Parent = node.parentId;
+            var folder = new exp.folder();
+            folder.name = node.name;
+            folder.id = node.id
+            folder.parent = node.parentId;
 
             if (withChildren){
                 var nodeSchema = db.getObject('node', 'fileSystem');
@@ -88,14 +94,21 @@ getInstance = function(id, user, callback/*function(instance, error)*/){
                         if (children) {
                             for (var i in children){
                                 var child = children[i];
+                                folder.children.push({
+                                    id: child.id,
+                                    name: child.name,
+                                    isContainer: child.isContainer
+                                });
+                                /*
                                 if (child.isContainer) {
                                     getFolderInfo(child, false, function (childFolder, err) {
-                                        folder.Children.push(childFolder);
+                                        folder.children.push(childFolder);
                                     });
                                 }
                                 else{
-                                    folder.Children.push(getFileInfo(child));
+                                    folder.children.push(getFileInfo(child));
                                 }
+                                */
                             }
                             callback && callback(folder, null);
                         }

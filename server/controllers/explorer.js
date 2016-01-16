@@ -42,11 +42,11 @@ exports.root = function(req, res, next) {
     checkAuthorization(req, res, function(){
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.send(500).send({ error: error, message: error.message });
+                res.status(500).send({ error: error, message: error.message });
             else{
                 instance.getRoot(function(folder, error){
                     if (error)
-                        res.send(500).send({ error: error, message: error.message });
+                        res.status(500).send({ error: error, message: error.message });
                     else
                         res.send(folder.toJson());
                 });
@@ -59,11 +59,11 @@ exports.newFolder = function(req, res, next) {
     checkAuthorization(req, res, function(){
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.send(500).send({ error: error, message: error.message });
+                res.status(500).send({ error: error, message: error.message });
             else{
                 instance.newFolder(req.body.id, req.body.name, function(folder, error){
                     if (error)
-                        res.send(500).send({ error: error, message: error.message });
+                        res.status(500).send({ error: error, message: error.message });
                     else
                         res.send(folder.toJson());
                 });
@@ -76,11 +76,11 @@ exports.delete = function(req, res, next) {
     checkAuthorization(req, res, function(){
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.send(500).send({ error: error, message: error.message });
+                res.status(500).send({ error: error, message: error.message });
             else{
                 instance.dropNode(req.body.id, function(result, error){
                     if (error)
-                        res.send(500).send({ error: error, message: error.message });
+                        res.status(500).send({ error: error, message: error.message });
                     else{
                         res.jsonp(result);
                     }
@@ -90,15 +90,36 @@ exports.delete = function(req, res, next) {
     });
 };
 
+exports.moveChild = function(req, res, next){
+    checkAuthorization(req, res, function(){
+        var parent = req.body.parentId;
+        var child = req.body.childId;
+
+        treeImpl.getInstance(null, req.user, function(instance, error){
+            if (error)
+                res.status(500).send({ error: error, message: error.message });
+            else{
+                instance.moveChild(req.body.parentId, req.body.childId, function(result, error){
+                    if (error)
+                        res.status(500).send({ error: error, message: error.message });
+                    else{
+                        res.jsonp(result);
+                    }
+                });
+            }
+        })
+    });
+}
+
 exports.rename = function(req, res, next) {
     checkAuthorization(req, res, function(){
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.send(500).send({ error: error, message: error.message });
+                res.status(500).send({ error: error, message: error.message });
             else{
                 instance.rename(req.body.id, req.body.newName, function(result, error){
                     if (error)
-                        res.send(500).send({ error: error, message: error.message });
+                        res.status(500).send({ error: error, message: error.message });
                     else{
                         res.jsonp(result);
                     }
@@ -112,11 +133,11 @@ exports.download = function(req, res, next) {
     checkAuthorization(req, res, function(){
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.send(500).send({ error: error, message: error.message });
+                res.status(500).send({ error: error, message: error.message });
             else{
                 instance.downloadFile(req.query.id, function(fileName, stream, error){
                     if (error)
-                        res.send(500).send({ error: error, message: error.message });
+                        res.status(500).send({ error: error, message: error.message });
                     else{
                         res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
                         res.setHeader('Content-type', 'application/octet-stream');
@@ -139,7 +160,7 @@ exports.initBlob = function(req, res, next){
                 req.user,
                 function(blob, error){
                     if (error)
-                        res.send(500).send({ error: error, message: error.message });
+                        res.status(500).send({ error: error, message: error.message });
                     else{
                         if (blob)
                             res.jsonp({ id: blob.id });
@@ -176,7 +197,7 @@ exports.addBlobChunk = function(req, res, next){
                     null,
                     function(blobInstance, error) {
                         if (error)
-                            res.send(500).send({ error: error, message: error.message });
+                            res.status(500).send({ error: error, message: error.message });
                         else {
                             if (blobInstance) {
 
@@ -271,7 +292,7 @@ exports.releaseBlob = function(req, res, next){
             null,
             function (blobInstance, error) {
                 if (error)
-                    res.send(500).send({ error: error, message: error.message });
+                    res.status(500).send({ error: error, message: error.message });
                 else {
                     if (blobInstance) {
 
@@ -311,7 +332,7 @@ exports.uploadFile = function(req, res, next){
             nodeSchema
                 .get(parentNodeId, null, function(parentNode, error){
                     if (error)
-                        res.send(500).send({ error: error, message: error.message });
+                        res.status(500).send({ error: error, message: error.message });
                     else{
                         if (parentNode){
                             dataLength = part.byteCount;
@@ -324,7 +345,7 @@ exports.uploadFile = function(req, res, next){
                                     req.user,
                                     function(blob, error){
                                         if (error)
-                                            res.send(500).send({ error: error, message: error.message });
+                                            res.status(500).send({ error: error, message: error.message });
                                         else{
                                             repositoryBlob = blob;
                                             repositoryBlob.containerNode = parentNode;
@@ -369,7 +390,7 @@ exports.uploadFile = function(req, res, next){
                 .dropInstance(repositoryBlob, function (newNode, error) {
                     if (res) {
                         if (error)
-                            res.send(500).send({ error: error, message: error.message });
+                            res.status(500).send({ error: error, message: error.message });
                         else
                             res.jsonp(treeImpl.getFileInfo(newNode));
                     }
@@ -382,6 +403,9 @@ exports.uploadFile = function(req, res, next){
 }
 
 function checkAuthorization(req, res, callback/*function()*/){
+
+    callback && callback();
+    return;
     if (req.user) {
         callback && callback();
     }

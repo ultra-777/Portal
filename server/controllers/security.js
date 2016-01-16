@@ -395,17 +395,19 @@ exports.getAccountInfo = function(req, res) {
 	}
 	else if (req.ip)
 		theIp = req.ip.toString();
+
 	var nginxProxy = (req.headers ? req.headers['x-nginx-proxy'] : null);
 	var isSecure = nginxProxy ? (req.headers['x-forwarded-protocol'] == 'https') : req.secure;
+
+	var result = {
+		ip: theIp,
+		secure: isSecure,
+		account: req.user
+	};
 
 
 	var schemaSession = db.getObject('session', 'security');
 	schemaSession.get(req.session.id, function(err, data){
-
-		var result = {
-			ip: theIp,
-			secure: isSecure
-		};
 
 		if (data)
 			result.userAgent = data.agent;

@@ -7,7 +7,7 @@
 var toString = require('../common/stringify');
 
 
-function JsonImpl() {
+function jsonImpl() {
     this.toJson = function() {
 
         return toString(this);
@@ -15,5 +15,5 @@ function JsonImpl() {
     };
 }
 
-module.exports.JsonImpl = JsonImpl;
+module.exports.jsonImpl = jsonImpl;
 

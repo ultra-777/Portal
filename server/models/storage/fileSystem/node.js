@@ -79,6 +79,34 @@ function model(sequelize, DataTypes) {
                             });
                     },
 
+                    moveChild: function(
+                        parentId,
+                        childId,
+                        callback/*function(node, error)*/
+                    ){
+                        var nodeSchema = sequelize.model('fileSystem.node');
+
+                        nodeSchema
+                            .find({
+                                where: {id: childId}
+                            })
+                            .then(function(node){
+
+                                node.parentId = parentId;
+                                node
+                                    .save()
+                                    .then(function (affectedRows) {
+                                            callback && callback(true, null);
+                                        })
+                                        .catch(function (err) {
+                                            callback && callback(null, err);
+                                        });
+                            })
+                            .catch(function(err){
+                                callback && callback(null, err);
+                            });
+                    },
+
                     dropById: function(
                         nodeId,
                         callback/*function(succeeded, error)*/

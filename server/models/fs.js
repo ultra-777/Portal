@@ -19,7 +19,7 @@ function getFile(path, stat){
 
     var fileName = map.getFileName(path);
 
-    var result = new exp.File();
+    var result = new exp.file();
     result.Id = map.pathToRelative(path);
     result.Parent = map.getParent(path);
     result.Name = fileName;
@@ -33,10 +33,10 @@ function getFolder(path, withChildren) {
     var relativePath = map.pathToRelative(path);
     var folderName = map.getFileName(relativePath);
 
-    var result = new exp.Folder();
-    result.Name = folderName;
-    result.Id = relativePath;
-    result.Parent = map.getParent(path);
+    var result = new exp.folder();
+    result.name = folderName;
+    result.id = relativePath;
+    result.parent = map.getParent(path);
 
     if (withChildren === true) {
         var dirContents = fs.readdirSync(path);

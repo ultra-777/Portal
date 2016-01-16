@@ -12,31 +12,38 @@ angular
         rootScope.$on('$stateChangeStart',
             function (event, toState, toParams, fromState, fromParams) {
 
-                if (toState && toState.name == 'signout'){
-                    event.preventDefault();
-                    authentication.signout();
-                    state.go('home');
-                }
+                authentication.getAccount()
+                    .then(function(account){
 
-                if (toState.data && toState.data.noLogin) {
-                        // какие-то действия перед входом без авторизации
-                } else {
-                    if (window.sessionStorage.account) {
-                        rootScope.account = account;
-                    } else {
-                        var history = rootScope.signinHistory;
-                        if (!history){
-                            history = {};
-                            rootScope.signinHistory = history;
+                        if (toState && toState.name == 'signout'){
+                            event.preventDefault();
+                            authentication.signout();
+                            state.go('home');
                         }
 
-                        history.toState = toState;
-                        history.toParams = toParams;
+                        if (toState.data && toState.data.noLogin) {
+                                // какие-то действия перед входом без авторизации
+                        } else {
+                            if (account) {
+                                //
+                            } else {
+                                var history = rootScope.signinHistory;
+                                if (!history){
+                                    history = {};
+                                    rootScope.signinHistory = history;
+                                }
 
-                        event.preventDefault();
-                        state.go('signin');
-                    }
-                }
+                                history.toState = toState;
+                                history.toParams = toParams;
+
+                                event.preventDefault();
+                                state.go('signin');
+                            }
+                        }
+
+                    }, function(error){
+                        console.log('routing.error: ' + error);
+                    });
             }
         );
     }]);

@@ -15,7 +15,7 @@
 		"angular-ui-utils": "~3",
 		"angular-ui-router": "~0.2",
         "angular-ui-grid": "~3",
-		"angular-bootstrap": "~0.13",
+		"angular-bootstrap": "~0.14",
 		"angular-material": "~1"
 	}
 }

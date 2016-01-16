@@ -14,7 +14,7 @@ function repositoryInstance(source) {
     this.created = source.created
 }
 
-repositoryInstance.prototype = new util.JsonImpl();
+repositoryInstance.prototype = new util.jsonImpl();
 
 function findInstances (name, callback/*function(instance, error)*/) {
 

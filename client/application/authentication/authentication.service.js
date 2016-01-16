@@ -16,6 +16,7 @@ angular
 		vm.signin = signin;
 		vm.signout = signout;
 		vm.signup = signup;
+		vm.getAccount = null;
 
 		function signin(login, password) {
 			var defer = q.defer();
@@ -29,7 +30,8 @@ angular
 				)
 				.then(function(response) {
 					//If successful we assign the response to the global user model
-					window.sessionStorage.account = JSON.stringify(response);
+					// window.sessionStorage.account = JSON.stringify(response);
+					rootScope.account = response;
 
 					continueAfterLogin();
 
@@ -47,7 +49,8 @@ angular
 				'/security/signout',
 				null
 			).then(function(response) {
-				window.sessionStorage.account = '';
+				// window.sessionStorage.account = '';
+				rootScope.account = null;
 				state.go('home');
 				headerMenu.reload();
 				defer.resolve();
@@ -72,7 +75,8 @@ angular
 			)
 			.then(function(response) {
 				//If successful we assign the response to the global user model
-				window.sessionStorage.account = JSON.stringify(response);
+				rootScope.account = response;
+				//window.sessionStorage.account = JSON.stringify(response);
 
 				continueAfterLogin();
 
@@ -96,5 +100,28 @@ angular
 			}
 			headerMenu.reload();
 		}
+
+		function initialize(){
+			var defer = q.defer();
+			function getAccount(){
+				return rootScope.account;
+			}
+			data.httpRequest(
+				'POST',
+				'/security/getAccountInfo',
+				null
+			).then(function(accountInfo) {
+				rootScope.account = accountInfo.account;
+				headerMenu.reload();
+				defer.resolve(getAccount());
+			}, function(err) {
+				defer.reject(err);
+			});
+			vm.getAccount = function(){
+				return defer.promise;
+			}
+		}
+
+		initialize();
 	}
 ]);

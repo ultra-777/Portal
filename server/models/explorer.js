@@ -11,43 +11,43 @@ var rootFolderAlias = '$';
 function itemIndex() {
     // always initialize all instance properties
     /*jshint validthis:true */
-    this.Id = '';
+    this.id = '';
 }
 
-itemIndex.prototype = new util.JsonImpl();
+itemIndex.prototype = new util.jsonImpl();
 
 function item() {
     // always initialize all instance properties
     /*jshint validthis:true */
-    this.IsContainer = false;
+    this.isContainer = false;
     /*jshint validthis:true */
-    this.Name = '';
+    this.name = '';
     /*jshint validthis:true */
-    this.Parent = '';
+    this.parent = '';
 }
 
 item.prototype = new itemIndex();
 
 function folder() {
     /*jshint validthis:true */
-    this.IsContainer = true;
+    this.isContainer = true;
     /*jshint validthis:true */
-    this.Children = [];
+    this.children = [];
 }
 folder.prototype = new item();
 
 
 function file() {
     /*jshint validthis:true */
-    this.Size = 0;
+    this.size = 0;
 }
 
 file.prototype = new item();
 
 // export the class
-module.exports.Folder = folder;
+module.exports.folder = folder;
 
-module.exports.File = file;
+module.exports.file = file;
 
-module.exports.RootAlias = rootFolderAlias;
+module.exports.rootAlias = rootFolderAlias;
 

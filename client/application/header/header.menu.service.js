@@ -5,8 +5,9 @@ angular
 	.module('header')
 	.service('headerMenuService', [
 		'$window',
+		'$rootScope',
 		'$state',
-		function(window, state) {
+		function(window, rootScope, state) {
 
 			var vm = this;
 			vm.menu = null;
@@ -16,7 +17,8 @@ angular
 				signin: 2,
 				signout: 3,
 				adminUpdate: 4,
-				adminRepository: 5
+				adminRepository: 5,
+				explorer: 6
 			};
 
 			function menuItem(){
@@ -129,6 +131,9 @@ angular
 					case vm.menuKeys.adminRepository: // admin-repository
 						state.go('admin-repository');
 						break;
+					case vm.menuKeys.explorer: // explorer
+						state.go('explorer');
+						break;
 					default:
 						return;
 				}
@@ -136,8 +141,9 @@ angular
 
 			function reload(){
 				vm.menu.clear();
-				var accountLine = window.sessionStorage.account;
-				var account = accountLine ? JSON.parse(accountLine) : null;
+				// var accountLine = window.sessionStorage.account;
+				// accountLine ? JSON.parse(accountLine) : null;
+				var account = rootScope.account;
 
 				if (account){
 
@@ -171,6 +177,7 @@ angular
 					}
 					var accountMenuItem = vm.menu.addItem(null, null, title);
 					accountMenuItem.addItem(vm.menuKeys.signout, onAction, 'Signout');
+					accountMenuItem.addItem(vm.menuKeys.explorer, onAction, 'Explorer');
 				}
 				else {
 					var accountMenuItem = vm.menu.addItem(null, null, 'Enter');

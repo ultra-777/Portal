@@ -21,6 +21,8 @@ angular
 		            main: {
 		                templateUrl: '/application/home/home.view.html',
 						controller: 'homeController as vm'
+						// templateUrl: '/application/explorer/explorer.view.html',
+						// controller: 'explorerController as vm'
 		            }
 		        }
 		    });

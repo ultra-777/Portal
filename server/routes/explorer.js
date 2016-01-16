@@ -4,14 +4,15 @@ module.exports = function(app) {
 	// Root routing
 	var explorer = require('../../server/controllers/explorer');
     app.route('/explorer').get(explorer.root);
-    app.route('/explorer/Root').get(explorer.root);
-    app.route('/explorer/Folder').post(explorer.folder);
-    app.route('/explorer/NewFolder').post(explorer.newFolder);
-    app.route('/explorer/Delete').post(explorer.delete);
-    app.route('/explorer/Rename').post(explorer.rename);
-    app.route('/explorer/Download').get(explorer.download);
-    app.route('/explorer/InitBlob').post(explorer.initBlob);
-    app.route('/explorer/AddBlobChunk').post(explorer.addBlobChunk);
-    app.route('/explorer/ReleaseBlob').post(explorer.releaseBlob);
-    app.route('/explorer/UploadFile').post(explorer.uploadFile);
+    app.route('/explorer/root').post(explorer.root);
+    app.route('/explorer/folder').post(explorer.folder);
+    app.route('/explorer/moveChild').post(explorer.moveChild);
+    app.route('/explorer/newFolder').post(explorer.newFolder);
+    app.route('/explorer/delete').post(explorer.delete);
+    app.route('/explorer/rename').post(explorer.rename);
+    app.route('/explorer/download').get(explorer.download);
+    app.route('/explorer/initBlob').post(explorer.initBlob);
+    app.route('/explorer/addBlobChunk').post(explorer.addBlobChunk);
+    app.route('/explorer/releaseBlob').post(explorer.releaseBlob);
+    app.route('/explorer/uploadFile').post(explorer.uploadFile);
 };

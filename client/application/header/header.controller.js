@@ -32,6 +32,7 @@ angular
                         vm.account.ip = ip;
                     if (result.host)
                         vm.account.host = result.host;
+
                     //initializeMenu();
                 }, function(err){
                     var q = 99;
