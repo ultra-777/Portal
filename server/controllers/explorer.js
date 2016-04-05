@@ -9,6 +9,7 @@ var fs = require('fs');
 var db = require('../models/storage/db');
 var config = require('../config/config');
 var treeImpl = require('../models/tree');
+var result = require('../common/result');
 
 var _blobSchema = db.getObject('blob', 'fileSystem');
 var _blobInstances = new Object();
@@ -20,35 +21,36 @@ process.on('message', function(msg){
     }
 });
 
-exports.folder = function(req, res, next) {
-
+exports.node = function(req, res, next) {
     checkAuthorization(req, res, function(){
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.status(500).send(error);
+                res.jsonp(result.failure(error.message));
             else{
-                instance.getFolder(req.body.id, function(folder, error){
+                instance.getNode(req.body.id, function(node, error){
+
                     if (error)
-                        res.status(500).send(error);
+                        res.jsonp(result.failure(error.message));
                     else
-                        res.send(folder.toJson());
+                        res.jsonp(result.success(node));
                 });
             }
         })
     });
 };
 
+
 exports.root = function(req, res, next) {
     checkAuthorization(req, res, function(){
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.status(500).send({ error: error, message: error.message });
+                res.jsonp(result.failure(error.message));
             else{
                 instance.getRoot(function(folder, error){
                     if (error)
-                        res.status(500).send({ error: error, message: error.message });
+                        res.jsonp(result.failure(error.message));
                     else
-                        res.send(folder.toJson());
+                        res.jsonp(result.success(folder));
                 });
             }
         })
@@ -59,13 +61,13 @@ exports.newFolder = function(req, res, next) {
     checkAuthorization(req, res, function(){
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.status(500).send({ error: error, message: error.message });
+                res.jsonp(result.failure(error.message));
             else{
                 instance.newFolder(req.body.id, req.body.name, function(folder, error){
                     if (error)
-                        res.status(500).send({ error: error, message: error.message });
+                        res.jsonp(result.failure(error.message));
                     else
-                        res.send(folder.toJson());
+                        res.jsonp(result.success(folder));
                 });
             }
         })
@@ -76,13 +78,13 @@ exports.delete = function(req, res, next) {
     checkAuthorization(req, res, function(){
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.status(500).send({ error: error, message: error.message });
+                res.jsonp(result.failure(error.message));
             else{
-                instance.dropNode(req.body.id, function(result, error){
+                instance.dropNode(req.body.id, function(resultFlag, error){
                     if (error)
-                        res.status(500).send({ error: error, message: error.message });
+                        res.jsonp(result.failure(error.message));
                     else{
-                        res.jsonp(result);
+                        res.jsonp(result.success(resultFlag));
                     }
                 });
             }
@@ -97,13 +99,13 @@ exports.moveChild = function(req, res, next){
 
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.status(500).send({ error: error, message: error.message });
+                res.jsonp(result.failure(error.message));
             else{
-                instance.moveChild(req.body.parentId, req.body.childId, function(result, error){
+                instance.moveChild(req.body.parentId, req.body.childId, function(resultFlag, error){
                     if (error)
-                        res.status(500).send({ error: error, message: error.message });
+                        res.jsonp(result.failure(error.message));
                     else{
-                        res.jsonp(result);
+                        res.jsonp(result.success(resultFlag));
                     }
                 });
             }
@@ -115,13 +117,13 @@ exports.rename = function(req, res, next) {
     checkAuthorization(req, res, function(){
         treeImpl.getInstance(null, req.user, function(instance, error){
             if (error)
-                res.status(500).send({ error: error, message: error.message });
+                res.jsonp(result.failure(error.message));
             else{
-                instance.rename(req.body.id, req.body.newName, function(result, error){
+                instance.rename(req.body.id, req.body.newName, function(resultFlag, error){
                     if (error)
-                        res.status(500).send({ error: error, message: error.message });
+                        res.jsonp(result.failure(error.message));
                     else{
-                        res.jsonp(result);
+                        res.jsonp(result.success(resultFlag));
                     }
                 });
             }
@@ -160,12 +162,12 @@ exports.initBlob = function(req, res, next){
                 req.user,
                 function(blob, error){
                     if (error)
-                        res.status(500).send({ error: error, message: error.message });
+                        res.jsonp(result.failure(error.message));
                     else{
                         if (blob)
-                            res.jsonp({ id: blob.id });
+                            res.jsonp(result.success({ id: blob.id }));
                         else
-                            res.jsonp({ id: null });
+                            res.jsonp(result.success({ id: null }));
                     }
                 });
     });
@@ -197,7 +199,7 @@ exports.addBlobChunk = function(req, res, next){
                     null,
                     function(blobInstance, error) {
                         if (error)
-                            res.status(500).send({ error: error, message: error.message });
+                            res.jsonp(result.failure(error.message));
                         else {
                             if (blobInstance) {
 
@@ -214,10 +216,10 @@ exports.addBlobChunk = function(req, res, next){
                                         });
                                 }
                                 else
-                                    res.send(404, 'instance is absent');
+                                    res.jsonp(result.failure('instance is absent'));
                             }
                             else
-                                res.send(404, 'instance is absent');
+                                res.jsonp(result.failure('instance is absent'));
                     }
                 });
         }
@@ -292,7 +294,7 @@ exports.releaseBlob = function(req, res, next){
             null,
             function (blobInstance, error) {
                 if (error)
-                    res.status(500).send({ error: error, message: error.message });
+                    res.jsonp(result.failure(error.message));
                 else {
                     if (blobInstance) {
 
@@ -302,7 +304,7 @@ exports.releaseBlob = function(req, res, next){
                             });
                         }
                         else
-                            res.send(404, 'instance is absent');
+                            res.jsonp(result.failure('instance is absent'));
                     }
                 }
             });
@@ -332,12 +334,13 @@ exports.uploadFile = function(req, res, next){
             nodeSchema
                 .get(parentNodeId, null, function(parentNode, error){
                     if (error)
-                        res.status(500).send({ error: error, message: error.message });
+                        res.jsonp(result.failure(error.message));
                     else{
                         if (parentNode){
                             dataLength = part.byteCount;
                             _blobSchema
                                 .create(
+                                    null,
                                     part.filename,
                                     parentNode.id,
                                     part.byteCount,
@@ -345,7 +348,7 @@ exports.uploadFile = function(req, res, next){
                                     req.user,
                                     function(blob, error){
                                         if (error)
-                                            res.status(500).send({ error: error, message: error.message });
+                                            res.jsonp(result.failure(error.message));
                                         else{
                                             repositoryBlob = blob;
                                             repositoryBlob.containerNode = parentNode;
@@ -365,7 +368,7 @@ exports.uploadFile = function(req, res, next){
 
         release();
 
-        res.send(200)
+        res.jsonp(result.failure('Upload error! ' + JSON.stringify(error)));
 
     });
 
@@ -374,7 +377,7 @@ exports.uploadFile = function(req, res, next){
 
         release();
 
-        res.send(200);
+        res.jsonp(result.failure('Upload aborted'));
 
     });
 
@@ -390,9 +393,9 @@ exports.uploadFile = function(req, res, next){
                 .dropInstance(repositoryBlob, function (newNode, error) {
                     if (res) {
                         if (error)
-                            res.status(500).send({ error: error, message: error.message });
+                            res.jsonp(result.failure(error.message));
                         else
-                            res.jsonp(treeImpl.getFileInfo(newNode));
+                            res.jsonp(result.success(treeImpl.getFileInfo(newNode)));
                     }
                     repositoryBlob = null;
                 });

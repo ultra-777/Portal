@@ -10,10 +10,10 @@ function model(sequelize, DataTypes) {
         sequelize.define(
             "account",
             {
+                name: { type: DataTypes.STRING, unique: true },
                 firstName: { type: DataTypes.STRING },
                 lastName: { type: DataTypes.STRING },
                 email: { type: DataTypes.STRING },
-                accountName: { type: DataTypes.STRING, unique: true },
                 password: { type: DataTypes.STRING },
                 salt: { type: DataTypes.STRING },
                 provider: { type: DataTypes.STRING },
@@ -27,7 +27,7 @@ function model(sequelize, DataTypes) {
                 schema: "security",
 
                 // define the table's name
-                tableName: 'Accounts',
+                tableName: 'Account',
 
                 hooks: {
                     beforeUpdate: function (user, fn){
@@ -41,11 +41,11 @@ function model(sequelize, DataTypes) {
                 classMethods: {
 
                     create: function(
+                        name,
+                        password,
+                        email,
                         firstName,
                         lastName,
-                        email,
-                        accountName,
-                        password,
                         provider,
                         roleName,
                         callback /*function(account, error)*/) {
@@ -60,10 +60,10 @@ function model(sequelize, DataTypes) {
                             })
                             .then(function (t) {
                                 var account = accountSchema.build();
+                                account.name = name;
                                 account.firstName = firstName;
                                 account.lastName = lastName;
                                 account.email = email;
-                                account.accountName = accountName;
                                 account.password = password;
                                 account.provider = provider;
                                 account.displayName =
@@ -170,8 +170,8 @@ function model(sequelize, DataTypes) {
 function configure(getObjectHandler){
     var account = getObjectHandler('account', 'security');
     var role = getObjectHandler('role', 'security');
-    account.belongsToMany(role, { as: {singular: 'role', plural: 'roles'}, through: 'AccountRoles' });
-    role.belongsToMany(account, { as: {singular: 'account', plural: 'accounts'}, through: 'AccountRoles' });
+    account.belongsToMany(role, { as: {singular: 'role', plural: 'roles'}, through: 'AccountRole' });
+    role.belongsToMany(account, { as: {singular: 'account', plural: 'accounts'}, through: 'AccountRole' });
 }
 
 

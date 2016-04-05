@@ -2,11 +2,11 @@
 "use strict";
 
 function execute(executeQueryHandler, executeFileQueryHandler){
-    executeFileQueryHandler(__dirname + '/roles.sql');
+    return executeFileQueryHandler(__dirname + '/roles.sql');
 }
 
 function init(executeQueryHandler, executeFileQueryHandler){
-    executeQueryHandler('CREATE SCHEMA IF NOT EXISTS "security"');
+    return executeQueryHandler('CREATE SCHEMA IF NOT EXISTS "security"');
 }
 
 

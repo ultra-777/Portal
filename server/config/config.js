@@ -28,7 +28,7 @@ module.exports = _.extend(
 );
 
 /**
- * Get files by glob patterns
+ * Get leafs by glob patterns
  */
 module.exports.getGlobbedFiles = function(globPatterns, removeRoot) {
 	// For context switching
@@ -73,7 +73,7 @@ module.exports.getGlobbedFiles = function(globPatterns, removeRoot) {
 };
 
 /**
- * Get the modules JavaScript files
+ * Get the modules JavaScript leafs
  */
 module.exports.getJavaScriptAssets = function(includeTests) {
 	var output = this.getGlobbedFiles(this.assets.lib.js.concat(this.assets.js), 'client/');
@@ -81,7 +81,7 @@ module.exports.getJavaScriptAssets = function(includeTests) {
 };
 
 /**
- * Get the modules CSS files
+ * Get the modules CSS leafs
  */
 module.exports.getCSSAssets = function() {
 	var output = this.getGlobbedFiles(this.assets.lib.css.concat(this.assets.css), 'client/');

@@ -19,6 +19,7 @@ module.exports = {
                 'client/lib/bootstrap/dist/css/bootstrap.css',
                 'client/lib/bootstrap/dist/css/bootstrap-theme.css',
                 'client/lib/angular-ui-grid/ui-grid.css',
+                'client/lib/angular-ui-layout/src/ui-layout.css',
                 'client/lib/angular-material/angular-material.css'
             ],
             js: [
@@ -31,6 +32,7 @@ module.exports = {
                 'client/lib/angular-sanitize/angular-sanitize.js',
                 'client/lib/angular-ui-router/release/angular-ui-router.js',
                 'client/lib/angular-ui-grid/ui-grid.js',
+                'client/lib/angular-ui-layout/src/ui-layout.js',
                 'client/lib/angular-bootstrap/ui-bootstrap-tpls.js',
                 'client/lib/angular-aria/angular-aria.js',
                 'client/lib/angular-material/angular-material.js',

@@ -7,6 +7,7 @@ var
     fs = require('fs'),
     path = require('path'),
     pg = require('pg').native,
+    q = require('q'),
     config = require('../../config/config');
 
 var _sequelize = null;
@@ -58,12 +59,12 @@ function initSequelize(uri){
     });
 
 
-
+    var promises = [];
     var initCount = initTasks.length;
     for (var i = 0; i < initCount; i++){
         var init = initTasks[i];
         if (init){
-            init(executeQuery, executeFileQuery);
+            promises.push(init(executeQuery, executeFileQuery));
         }
     }
 
@@ -77,37 +78,58 @@ function initSequelize(uri){
     }
 
     configuration = null;
+
+    var defer = q.defer();
+    q.all(promises).then(function(results){
+        defer.resolve(true);
+    });
+    return defer.promise;
 }
 
 function initSequelizeAndSynq(uri){
-    initSequelize(uri);
-    var promise = _sequelize.sync();
-    promise.then(function(){
-        var currentFileName = __filename;
-        var execute = [];
-        config.getGlobbedFiles(__dirname + '/**/*.js').forEach(function(item) {
-            var resolvedPath = path.resolve(item);
-            if (currentFileName !== resolvedPath) {
-                var reference = require(resolvedPath);
-                if (reference) {
 
-                    var exec = reference.exec;
-                    if (exec) {
-                        execute.push(exec)
-                        //console.log('-- exec: ' + resolvedPath);
+    var defer = q.defer();
+
+    initSequelize(uri).then(function(result){
+
+
+        var promise = _sequelize.sync();
+        promise.then(function(){
+            var currentFileName = __filename;
+            var execute = [];
+            config.getGlobbedFiles(__dirname + '/**/*.js').forEach(function(item) {
+                var resolvedPath = path.resolve(item);
+                if (currentFileName !== resolvedPath) {
+                    var reference = require(resolvedPath);
+                    if (reference) {
+
+                        var exec = reference.exec;
+                        if (exec) {
+                            execute.push(exec)
+                            //console.log('-- exec: ' + resolvedPath);
+                        }
                     }
                 }
+            });
+            var promises = [];
+            var execCount = execute.length;
+            for (var i = 0; i < execCount; i++){
+                var exec = execute[i];
+                if (exec){
+                    exec(executeQuery, executeFileQuery);
+                }
             }
+            q.all(promises).then(function(results){
+                defer.resolve(true, null);
+            });
+        },
+        function(err){
+            defer.resolve(false, err);
         });
-        var execCount = execute.length;
-        for (var i = 0; i < execCount; i++){
-            var exec = execute[i];
-            if (exec){
-                exec(executeQuery, executeFileQuery);
-            }
-        }
-    })
-    return promise;
+
+    });
+
+    return defer.promise;
 }
 
 function getObject(objectName, schemaName){

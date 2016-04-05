@@ -9,7 +9,11 @@ var getFileInfo = function(node){
     file.id = node.id;
     file.parent = node.parentId;
     file.name = node.name;
-    file.size = node.file.size;
+    if (node.file){
+        file.extension = node.file.extension;
+        file.size = node.file.size;
+        file.created = node.file.created;
+    }
     return file;
 }
 
@@ -53,12 +57,19 @@ getInstance = function(id, user, callback/*function(instance, error)*/){
                 });
         };
 
-        this.getFolder = function(nodeId, callback/*function(folder, error)*/) {
+        this.getNode = function(nodeId, callback/*function(node, error)*/) {
             var nodeSchema = db.getObject('node', 'fileSystem');
+            var fileSchema = db.getObject('file', 'fileSystem');
             nodeSchema
-                .find({where: {id: nodeId}})
+                .find({
+                    where: {id: nodeId},
+                    include: [{model: fileSchema, as: 'file'}]
+                })
                 .then(function(node) {
-                    getFolderInfo(node, true, callback);
+                    if (node.isContainer)
+                        getFolderInfo(node, true, callback);
+                    else
+                        callback && callback(getFileInfo(node), null);
                 })
                 .catch(function(err){
                     callback && callback (null, err);

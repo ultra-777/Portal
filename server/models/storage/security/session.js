@@ -21,7 +21,7 @@ function model(sequelize, DataTypes) {
 
                 schema: "security",
 
-                tableName: 'Sessions',
+                tableName: 'Session',
 
                 classMethods: {
                     get: function(sid, callback){

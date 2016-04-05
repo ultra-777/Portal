@@ -36,7 +36,7 @@ BEGIN
 						cast (root."id" as varchar (50)) as "path", 
 						1 
 					from 
-						"fileSystem"."Nodes" root 
+						"fileSystem"."Node" root
 					where 
 						root."id" = targetNodeId
 				)
@@ -52,7 +52,7 @@ BEGIN
 						cast ( hierarchy."path" || '.' || descendant."id" as varchar(50)) "path", 
 						level + 1 
 					from 
-						"fileSystem"."Nodes" descendant 
+						"fileSystem"."Node" descendant
 						join hierarchy on( hierarchy."id"=descendant."parentId")
 				)      
 			)
@@ -68,8 +68,8 @@ BEGIN
 				r."location"
 			from 
 				hierarchy h 
-				left join "fileSystem"."Files" f on f.id = h."fileId"
-				left join "fileSystem"."Repositories" r on r.id = f."repositoryId"
+				left join "fileSystem"."File" f on f.id = h."fileId"
+				left join "fileSystem"."Repository" r on r.id = f."repositoryId"
 			order by 
 				h.level desc, 
 				h."isContainer" asc,
@@ -79,9 +79,9 @@ BEGIN
 
 	FOR v_record IN SELECT d.id, d."fileId" from descendants d
 	LOOP
-		delete from "fileSystem"."Blobs" b where (b."containerNodeId" = v_record."id") or (b."fileId" = v_record."fileId");
-		delete from "fileSystem"."Nodes" n WHERE n.id = v_record."id";
-		delete from "fileSystem"."Files" f WHERE f.id = v_record."fileId";
+		delete from "fileSystem"."Blob" b where (b."containerNodeId" = v_record."id") or (b."fileId" = v_record."fileId");
+		delete from "fileSystem"."Node" n WHERE n.id = v_record."id";
+		delete from "fileSystem"."File" f WHERE f.id = v_record."fileId";
 	END LOOP;
 
 

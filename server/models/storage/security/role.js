@@ -15,7 +15,7 @@ function model(sequelize, DataTypes) {
                 schema: "security",
 
                 // define the table's name
-                tableName: 'Roles'
+                tableName: 'Role'
             }
         );
     return definition;

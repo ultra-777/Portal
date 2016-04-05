@@ -8,7 +8,7 @@ var
 	dns = require('dns'),
 	config = require('../config/config'),
 	db = require('../models/storage/db'),
-	uaParser = require('ua-parser-js'),
+	result = require('../common/result'),
 	_ = require('lodash');
 
 /**
@@ -44,28 +44,33 @@ var getErrorMessage = function(err) {
 exports.signup = function(req, res) {
 
     var accountSchema = db.getObject('account', 'security');
+	if (!req.body.login || req.body.login.length < 1){
+		res.jsonp(result.failure('Empty login is not allowed'));
+		return;
+	}
+
+	if (!req.body.password || req.body.password.length < 1){
+		res.jsonp(result.failure('Empty password is not allowed'));
+		return;
+	}
     accountSchema.create(
+		req.body.login,
+		req.body.password,
+		req.body.email,
         req.body.firstName,
         req.body.lastName,
-        req.body.email,
-        req.body.username,
-        req.body.password,
         'local',
         'user',
         function(account, err){
             if (err){
-                res.send(400, {
-                    message: getErrorMessage(err)
-                });
+				res.jsonp(result.failure(getErrorMessage(err)));
             }
             else
                 req.login(account, function (err) {
                     if (err) {
-                        res.send(400, {
-                            message: getErrorMessage(err)
-                        });
+						res.jsonp(result.failure(getErrorMessage(err)));
                     } else {
-                        res.jsonp(account);
+                        res.jsonp(result.success(account));
                     }
                 });
         });
@@ -77,7 +82,7 @@ exports.signup = function(req, res) {
 exports.signin = function(req, res, next) {
 	passport.authenticate('local', function(err, user, info) {
 		if (err || !user) {
-			res.send(400, info);
+			res.jsonp(result.failure(getErrorMessage(info)));
 		} else {
 			// Remove sensitive data before login
 			user.password = undefined;
@@ -85,14 +90,25 @@ exports.signin = function(req, res, next) {
 
 			req.login(user, function(err) {
 				if (err) {
-					res.send(400, err);
+					res.jsonp(result.failure(getErrorMessage(err)));
 				} else {
-
-					res.jsonp(user);
+					res.jsonp(result.success(user));
 				}
 			});
 		}
 	})(req, res, next);
+};
+
+/**
+ * Signout
+ */
+exports.signout = function(req, res) {
+	if (!req.user)
+		res.jsonp(result.failure('the session is not authenticated'));
+	else {
+		var result1 = req.logout();
+		res.jsonp(result.success(null));
+	}
 };
 
 /**
@@ -104,7 +120,8 @@ exports.update = function(req, res) {
 	var message = null;
 
 	// For security measurement we remove the roles from the req.body object
-	delete req.body.roles;
+	if (req && req.body && req.body.roles)
+		req.body.roles = null;
 
 	if (user) {
 		// Merge existing user
@@ -194,32 +211,17 @@ exports.changePassword = function(req, res, next) {
 };
 
 /**
- * Signout
- */
-exports.signout = function(req, res) {
-	req.logout();
-	res.redirect('/');
-};
-
-/**
- * Send User
- */
-exports.me = function(req, res) {
-	res.jsonp(req.user || null);
-};
-
-/**
  * OAuth callback
  */
 exports.oauthCallback = function(strategy) {
 	return function(req, res, next) {
 		passport.authenticate(strategy, function(err, user, redirectURL) {
 			if (err || !user) {
-				return res.redirect('/#!/signin');
+				return res.redirect('/#!/authentication');
 			}
 			req.login(user, function(err) {
 				if (err) {
-					return res.redirect('/#!/signin');
+					return res.redirect('/#!/authentication');
 				}
 
 				return res.redirect(redirectURL || '/');
@@ -383,7 +385,7 @@ exports.removeOAuthProvider = function(req, res, next) {
 };
 
 
-exports.getAccountInfo = function(req, res) {
+exports.getSessionInfo = function(req, res) {
 
 	var theIp = '';
 	if (req.ips && req.ips.length){
@@ -399,9 +401,9 @@ exports.getAccountInfo = function(req, res) {
 	var nginxProxy = (req.headers ? req.headers['x-nginx-proxy'] : null);
 	var isSecure = nginxProxy ? (req.headers['x-forwarded-protocol'] == 'https') : req.secure;
 
-	var result = {
+	var resultData = {
 		ip: theIp,
-		secure: isSecure,
+		isSecure: isSecure,
 		account: req.user
 	};
 
@@ -410,12 +412,12 @@ exports.getAccountInfo = function(req, res) {
 	schemaSession.get(req.session.id, function(err, data){
 
 		if (data)
-			result.userAgent = data.agent;
+			resultData.agent = data.agent;
 
 		dns.reverse(theIp, function(err, hostNames){
 			if (hostNames && hostNames.length && hostNames.length > 0)
-				result.host = hostNames[0];
-			res.jsonp(result);
+				resultData.host = hostNames[0];
+			res.jsonp(result.success(resultData));
 		});
 	});
 };

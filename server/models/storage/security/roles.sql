@@ -1,10 +1,10 @@
 
-insert into "security"."Roles" ("name")
+insert into "security"."Role" ("name")
 select 'user'
-where not exists (select null from "security"."Roles" where "name" = 'user');
+where not exists (select null from "security"."Role" where "name" = 'user');
 
-insert into "security"."Roles" ("name")
+insert into "security"."Role" ("name")
 select 'admin'
-where not exists (select null from "security"."Roles" where "name" = 'admin');
+where not exists (select null from "security"."Role" where "name" = 'admin');
 
 

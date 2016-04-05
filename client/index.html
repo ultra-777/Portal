@@ -1,0 +1,38 @@
+﻿<html>
+    <head>
+
+        <base href="/">
+
+        <!---->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.33.3/es6-shim.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.19.16/system-polyfills.js"></script>
+
+
+        <!-- inject:css -->
+        <!-- endinject -->
+
+    </head>
+    <body class="app">
+        <portal-root>Loading...</portal-root>
+        <!-- inject:js -->
+        <!-- endinject -->
+
+        <script>
+            System.config({
+                packages: {
+                    app: {
+                        format: 'cjs',
+                        defaultExtension: 'js'
+                    }
+                },
+                map: {
+                    moment: 'libs/moment.min.js'
+                }
+
+            });
+            System
+                .import('app/bootstrap')
+                .then(null, console.error.bind(console));
+        </script>
+    </body>
+</html>

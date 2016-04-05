@@ -11,17 +11,17 @@ var passport = require('passport'),
 module.exports = function() {
 	// Use local strategy
 	passport.use(new LocalStrategy({
-			usernameField: 'username',
+			usernameField: 'login',
 			passwordField: 'password'
 		},
-		function(username, password, done) {
+		function(login, password, done) {
 
 			var user = db.getObject('account', 'security');
 			var role = db.getObject('role', 'security');
-			// console.log('-- strategies/local finding user: ' + username);
+			// console.log('-- strategies/local finding user: ' + login);
 			user.find(
 				{
-					where: { accountName: username },
+					where: { name: login },
 					include: [{ model: role, as: 'roles' }]
 				})
 				.then(function(user){

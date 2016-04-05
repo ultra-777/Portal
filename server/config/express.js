@@ -28,7 +28,7 @@ module.exports = function() {
 	// Initialize express app
 	var app = express();
 
-	// Globbing model files
+	// Globbing model leafs
 	config.getGlobbedFiles('./server/models/**/*.js').forEach(function(modelPath) {
 		require(path.resolve(modelPath));
 	});
@@ -121,9 +121,9 @@ module.exports = function() {
 
 
 	// Setting the app router and static folder
-	app.use(express.static(path.resolve('./client')));
+	app.use(express.static(path.resolve('./wwwroot')));
 
-	// Globbing routing files
+	// Globbing routing leafs
 	config.getGlobbedFiles('./server/routes/**/*.js').forEach(function(routePath) {
 		require(path.resolve(routePath))(app);
 	});

@@ -17,7 +17,7 @@ function model(sequelize, DataTypes) {
                 schema: "fileSystem",
 
                 // define the table's name
-                tableName: 'Trees'
+                tableName: 'Tree'
             }
         );
     return definition;

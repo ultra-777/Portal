@@ -1,0 +1,13 @@
+﻿<div class="message-box">
+    <div class="modal-header">
+        <h4 class="modal-title">{{context?.title}}</h4>
+    </div>
+    <div class="modal-body">
+        <div [innerHTML]="context.body"></div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-sm btn-primary" (click)="ok($event)">{{context?.okText}}</button>
+        <button *ngIf="isNoVisible" class="btn btn-sm btn-warning" (click)="no($event)">{{context?.noText}}</button>
+        <button *ngIf="isCancelVisible" class="btn btn-sm" (click)="cancel($event)">{{context?.cancelText}}</button>
+    </div>
+</div>

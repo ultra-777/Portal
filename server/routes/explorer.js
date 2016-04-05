@@ -5,7 +5,7 @@ module.exports = function(app) {
 	var explorer = require('../../server/controllers/explorer');
     app.route('/explorer').get(explorer.root);
     app.route('/explorer/root').post(explorer.root);
-    app.route('/explorer/folder').post(explorer.folder);
+    app.route('/explorer/node').post(explorer.node);
     app.route('/explorer/moveChild').post(explorer.moveChild);
     app.route('/explorer/newFolder').post(explorer.newFolder);
     app.route('/explorer/delete').post(explorer.delete);

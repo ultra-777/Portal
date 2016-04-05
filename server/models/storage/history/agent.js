@@ -24,7 +24,7 @@ function model(sequelize, DataTypes) {
 
                 schema: "history",
 
-                tableName: 'Agents'
+                tableName: 'Agent'
             }
         );
     return definition;

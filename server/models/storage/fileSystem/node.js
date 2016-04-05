@@ -24,7 +24,7 @@ function model(sequelize, DataTypes) {
                 schema: "fileSystem",
 
                 // define the table's name
-                tableName: 'Nodes',
+                tableName: 'Node',
 
                 classMethods: {
 

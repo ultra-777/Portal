@@ -1,0 +1,63 @@
+﻿@import "../../variables.less";
+
+.feeder{
+    position:absolute;
+    width:@feeder-width;
+    top:@header-height - @header-shadow-space;
+    padding: 2px;
+    bottom:0;
+    display: none;
+    background-color: @tool-background-color;
+    background-image: -webkit-linear-gradient(top, @tool-background-gradient-start, @tool-background-gradient-end);
+    background-image: -moz-linear-gradient(top, @tool-background-gradient-start, @tool-background-gradient-end);
+    background-image: -o-linear-gradient(top, @tool-background-gradient-start, @tool-background-gradient-end);
+    background-image: linear-gradient(top, @tool-background-gradient-start, @tool-background-gradient-end);
+}
+
+.is-stuck .feeder{
+    position:fixed !important;
+    z-index:100;
+    bottom:0 !important;
+    top:@header-toolbar-height - @header-shadow-space !important;
+}
+
+.feeder-container{
+    display: inline-block;
+    height: 100%;
+    background: white;
+    overflow: hidden;
+}
+
+.feeder-container:hover{
+    overflow-y: auto;
+}
+
+
+.feeder-item{
+    display: inline-block;
+    padding: 17px 20px;
+    width: 100%;
+
+    font-size: 14px;
+    color: #000;
+    overflow: hidden;
+    border-bottom: 1px solid #ededed;
+    border-right: 1px solid #ededed;
+}
+
+.feeder-item:hover{
+    border-color: lightgray;
+    border-radius: 3px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+}
+
+
+@media @screen-huge {
+    .root {
+        .feeder {
+            display: inline-block;
+        }
+    }
+}

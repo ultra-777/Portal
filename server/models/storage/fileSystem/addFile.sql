@@ -25,10 +25,10 @@ BEGIN
 
 	v_repository = (
 		select id
-		from "fileSystem"."Repositories"
+		from "fileSystem"."Repository"
 		where
 		    "isOpen" = true
-		    and ((repositoryName is null) or ("name" = repositoryName))
+		    and ((repositoryName is null) or ("Repository"."name" = repositoryName))
 		order by id
 		limit 1);
 
@@ -36,13 +36,13 @@ BEGIN
 	    raise exception 'Not any repository is defined';
 	end if;
 
-	v_maxChildFilesNumber = (select "childFilesLimit" from "fileSystem"."Repositories" where id = v_repository);
-    v_maxChildFoldersNumber = (select "childFoldersLimit" from "fileSystem"."Repositories" where id = v_repository);
-    v_repositoryLocation = (select "location" from "fileSystem"."Repositories" where id = v_repository);
+	v_maxChildFilesNumber = (select "childFilesLimit" from "fileSystem"."Repository" where id = v_repository);
+    v_maxChildFoldersNumber = (select "childFoldersLimit" from "fileSystem"."Repository" where id = v_repository);
+    v_repositoryLocation = (select "location" from "fileSystem"."Repository" where id = v_repository);
 
 	-- Ensure existence of at least one folder
-	if (not exists (select id from "fileSystem"."Folders" limit 1)) then
-		insert into "fileSystem"."Folders" 
+	if (not exists (select id from "fileSystem"."Folder" limit 1)) then
+		insert into "fileSystem"."Folder"
 			("repositoryId", "parentId", "parentPath", "created")
 		values  
 			(v_repository, null, '', current_timestamp);
@@ -71,7 +71,7 @@ BEGIN
 					cast (fld1."id" as varchar (50)) as "path", 
 					1 
 				from 
-					"fileSystem"."Folders" fld1 
+					"fileSystem"."Folder" fld1
 				where 
 					fld1."parentId" is null
 			)
@@ -84,7 +84,7 @@ BEGIN
 					cast ( fld2."parentPath" || '.' || fld2."id" as varchar(50)) "path", 
 					level + 1 
 				from 
-					"fileSystem"."Folders" fld2 
+					"fileSystem"."Folder" fld2
 					join hierarchy on( hierarchy."id"=fld2."parentId")
 			)      
 		)
@@ -114,7 +114,7 @@ BEGIN
 			fld.id
 		from
 			folders fld
-			left join "fileSystem"."Files" c_f on c_f."folderId" = fld.id
+			left join "fileSystem"."File" c_f on c_f."folderId" = fld.id
 		group by
 			fld."id"
 		having 
@@ -130,7 +130,7 @@ BEGIN
 				fld.id
 			from
 				folders fld
-				left join "fileSystem"."Folders" c_fld on c_fld."parentId" = fld.id
+				left join "fileSystem"."Folder" c_fld on c_fld."parentId" = fld.id
 			group by
 				fld."id"
 			having 
@@ -147,7 +147,7 @@ BEGIN
 			limit 1);
 
 		if (v_nearestOpenFoldersFolder is not null) then
-		insert into "fileSystem"."Folders" 
+		insert into "fileSystem"."Folder"
 			("repositoryId", "parentId", "parentPath", "created")
 		values  
 			(v_repository, v_nearestOpenFoldersFolder, v_folderPath, current_timestamp)
@@ -168,7 +168,7 @@ BEGIN
 	end if;
 
 	insert into 
-		"fileSystem"."Files" (
+		"fileSystem"."File" (
 			"name"
 			,"extension"
 			,"folderId"

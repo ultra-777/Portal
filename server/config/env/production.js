@@ -15,6 +15,7 @@ module.exports = {
 				'client/lib/bootstrap/dist/css/bootstrap.min.css',
 				'client/lib/bootstrap/dist/css/bootstrap-theme.min.css',
                 'client/lib/angular-ui-grid/ui-grid.min.css',
+				'client/lib/angular-ui-layout/src/ui-layout.css',
 				'client/lib/angular-material/angular-material.min.css'
 			],
 			js: [
@@ -27,6 +28,7 @@ module.exports = {
 				'client/lib/angular-sanitize/angular-sanitize.min.js',
 				'client/lib/angular-ui-router/release/angular-ui-router.min.js',
                 'client/lib/angular-ui-grid/ui-grid.min.js',
+				'client/lib/angular-ui-layout/src/ui-layout.js',
 				'client/lib/angular-aria/angular-aria.min.js',
 				'client/lib/angular-material/angular-material.min.js',
 				'client/lib/angular-bootstrap/ui-bootstrap-tpls.min.js'

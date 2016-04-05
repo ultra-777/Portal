@@ -1,0 +1,16 @@
+<form class="explorer-rename" (ngSubmit)="onSubmit()">
+    <fieldset>
+        <div class="modal-header">
+            <h3>Upload file</h3>
+        </div>
+        <div class="modal-body">
+            <button style="margin: 2px;" (click)="onBrowse($event)"> Browse </button>
+            <input type="file" #source style="display: none;" (change)="onFileChanged($event)"/>
+            <input type="text" [(ngModel)]="name" [disabled]="!current" autofocus title="{{path}}"/>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" (click)="ok($event)" [disabled]="!current || !isValid">OK</button>
+            <button class="btn btn-warning" type="button" (click)="cancel($event)">Cancel</button>
+        </div>
+    </fieldset>
+</form>

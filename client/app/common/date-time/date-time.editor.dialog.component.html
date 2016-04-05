@@ -1,0 +1,33 @@
+﻿<div class="container-fluid datetime-editor-dialog">
+    <div>
+        <pre><em *ngIf="dt">{{ getDate() | date:'short'}}</em></pre>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div style="display:inline-block;">
+                <datepicker [(ngModel)]="dt"
+                            [minDate]="minDate"
+                            [initDate]="initialDate"
+                            [showWeeks]="true">
+
+                </datepicker>
+            </div>
+            <br />
+            <button type="button" class="btn btn-sm btn-info" (click)="today()">Today</button>
+            <button type="button" class="btn btn-sm btn-danger" (click)="clearDate()">Clear</button>
+        </div>
+        <div class="col-md-4">
+            <timepicker 
+                        [(ngModel)]="dt" 
+                        [hourStep]="hstep" 
+                        [minuteStep]="mstep" 
+                        [showMeridian]="ismeridian">
+
+            </timepicker>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-sm btn-primary" (click)="ok($event)">Ok</button>
+        <button class="btn btn-sm" (click)="cancel($event)">Cancel</button>
+    </div>
+</div>

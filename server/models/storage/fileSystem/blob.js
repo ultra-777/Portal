@@ -22,7 +22,7 @@ function model(sequelize, DataTypes) {
                 schema: "fileSystem",
 
                 // define the table's name
-                tableName: 'Blobs',
+                tableName: 'Blob',
 
                 hooks: {
                     beforeUpdate: function (blob, fn){
@@ -99,6 +99,7 @@ function model(sequelize, DataTypes) {
                     },
 
                     create: function(
+                        repositoryName,
                         fileName,
                         parentNodeId,
                         totalSize,
@@ -117,6 +118,7 @@ function model(sequelize, DataTypes) {
                             .then(function (t) {
                                 fileSchema
                                     .create(
+                                        repositoryName,
                                         fileName,
                                         totalSize,
                                         t,

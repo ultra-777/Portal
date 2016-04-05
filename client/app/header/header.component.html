@@ -1,0 +1,130 @@
+﻿
+
+<div class="header">
+    <div class="logo-title-container">
+        <div class="logo-title main">Uniwebex</div>
+        <div class="logo-title domain">.com</div>
+        <div class="logo-title session-summary">
+            <div class="session-summary-item">{{session?.ip}}</div>
+            <div class="session-summary-item">Is secure:&nbsp;{{session?.isSecure}}</div>
+        </div>
+    </div>
+
+    <div class="header-toolbar">
+        <div id="header-toolbar-icon" class="toolbar-section">
+            <div class="logo-container">
+                <!--<img src="./favicon-32.png" class="logo-image">-->
+                <img src="./app/header/uniwebex.png" class="logo-image">
+            </div>
+        </div>
+
+        <div class="toolbar-section toolbar-main toolbar-human">
+            <ul>
+                <li dropdown>
+                    <div class="dropdown-toggle" dropdownToggle>
+                        <i class="glyphicon glyphicon-user toolbar-human"></i>
+                        <div *ngIf="account" class="toolbar-item options-toolbar-huge">{{account?.name}}</div>
+                        <div *ngIf="!account" class="toolbar-item options-toolbar-huge">Authentication</div>
+                        <div class="toolbar-item caret"></div>
+                    </div>
+
+
+
+                    <ul class=" dropdown-menu dropdown-menu-right popup-menu">
+                        <!--<li class="divider dropdown-divider"></li>-->
+
+                        <li *ngIf="!account">
+                            <span class="dropdown-item" (click)="signIn()">Sign in</span>
+                        </li>
+                        <li *ngIf="!account">
+                            <span class="dropdown-item" (click)="signUp()">Sign up</span>
+                        </li>
+                        <li *ngIf="account">
+                            <span class="dropdown-item" (click)="signOut()">Sign out</span>
+                        </li>
+                    </ul>
+                </li>
+                <!--
+                </li>
+
+                    <i class="glyphicon glyphicon-off options-toolbar-medium" (click)="signOut()" title="Sign Out"></i>
+                    <div class="toolbar-item options-toolbar-huge" (click)="signOut()">Sign Out</div>
+                </li>
+
+                <li *ngIf="!account" (click)="signIn()">
+
+                    <div class="toolbar-item options-toolbar-huge" >Authentication</div>
+                    <i class="glyphicon glyphicon-log-in toolbar-human" title="Sign In"></i>
+                </li>
+                -->
+            </ul>
+        </div>
+
+        <div class="toolbar-section toolbar-main toolbar-human">
+            <ul>
+                <!--
+                <li *ngIf="account">
+                    <i class="glyphicon glyphicon-list-alt options-toolbar-medium" title="Options"></i>
+                    <div class="toolbar-item options-toolbar-huge">Options</div>
+                </li>
+                <li *ngIf="account">
+                    <i class="glyphicon glyphicon-phone-alt options-toolbar-medium" title="Звонок"></i>
+                    <div class="toolbar-item options-toolbar-huge">Call</div>
+                </li>
+                -->
+                <li *ngIf="account" (click)="explorer()">
+                    <i class="glyphicon glyphicon-folder-open" title="Explorer"></i>
+                    <div class="toolbar-item options-toolbar-huge">Explorer</div>
+                </li>
+                <li *ngIf="isAdmin" (click)="admin()">
+                    <i class="glyphicon glyphicon-cog" title="Administration"></i>
+                    <div class="toolbar-item options-toolbar-huge">Administration</div>
+                </li>
+                <!--
+                <li *ngIf="account">
+                    <i class="glyphicon glyphicon-fire options-toolbar-medium" title="Support"></i>
+                    <div class="toolbar-item options-toolbar-huge">Support</div>
+                </li>
+                <li *ngIf="account">
+                    <i class="glyphicon glyphicon-home options-toolbar-medium" title="Home"></i>
+                    <div class="toolbar-item options-toolbar-huge">Home</div>
+                </li>
+                -->
+            </ul>
+        </div>
+
+
+
+
+        <div class="toolbar-section toolbar-main options-toolbar-small">
+            <ul>
+                <li dropdown>
+
+                    <i class="glyphicon glyphicon-menu-hamburger dropdown-toggle" dropdownToggle title="Menu"></i>
+
+                    <ul class=" dropdown-menu dropdown-menu-right popup-menu">
+                        <!--<li class="divider dropdown-divider"></li>-->
+                        <li *ngIf="isAdmin">
+                            <span class="dropdown-item" (click)="admin()">Administration</span>
+                        </li>
+                        <li *ngIf="isAdmin" class="divider dropdown-divider"></li>
+                        <li *ngIf="account">
+                            <span class="dropdown-item" (click)="admin()">Explorer</span>
+                        </li>
+                        <li *ngIf="account" class="divider dropdown-divider"></li>
+                        <li *ngIf="!account">
+                            <span class="dropdown-item" (click)="signIn()">Sign in</span>
+                        </li>
+                        <li *ngIf="!account">
+                            <span class="dropdown-item" (click)="signUp()">Sign up</span>
+                        </li>
+                        <li *ngIf="account">
+                            <span class="dropdown-item" (click)="signOut()">Sign out</span>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>

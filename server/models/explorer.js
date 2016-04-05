@@ -39,7 +39,11 @@ folder.prototype = new item();
 
 function file() {
     /*jshint validthis:true */
+    this.extension = '';
+    /*jshint validthis:true */
     this.size = 0;
+    /*jshint validthis:true */
+    this.created = null;
 }
 
 file.prototype = new item();

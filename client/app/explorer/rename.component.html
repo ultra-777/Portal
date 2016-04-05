@@ -1,0 +1,15 @@
+<form class="explorer-rename" (ngSubmit)="onSubmit()">
+    <fieldset>
+        <div class="modal-header">
+            <h3>Rename</h3>
+            <span>{{original}}</span>
+        </div>
+        <div class="modal-body">
+            <input type="text" [(ngModel)]="current" autofocus/>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" (click)="ok($event)" [disabled]="!current || !isDirty || !isValid">OK</button>
+            <button class="btn btn-warning" type="button" (click)="cancel($event)">Cancel</button>
+        </div>
+    </fieldset>
+</form>

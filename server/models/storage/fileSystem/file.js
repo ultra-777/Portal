@@ -27,7 +27,7 @@ function model(sequelize, DataTypes) {
                 schema: "fileSystem",
 
                 // define the table's name
-                tableName: 'Files',
+                tableName: 'File',
 
                 hooks: {
                     'afterDestroy': function(file, fn) {
@@ -45,10 +45,12 @@ function model(sequelize, DataTypes) {
 
                 classMethods: {
 
-                    create: function (name, size, theTransaction, callback) {
+                    create: function (repositoryName, name, size, theTransaction, callback) {
 
                         var query =
                             'select * from "fileSystem"."addFile"(' +
+                            (repositoryName ? '\'' + repositoryName + '\'' : 'null') +
+                            ', ' +
                             (name ? '\'' + name + '\'' : 'null') +
                             ', ' +
                             (config.repositoryFileExtension ? '\'' + config.repositoryFileExtension + '\'' : 'null') +

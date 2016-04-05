@@ -46,7 +46,7 @@ function getFolder(path, withChildren) {
             var itemPath = map.joinPath(path, item);
             if (fs.existsSync(itemPath)) {
                 var stat = fs.statSync(itemPath);
-                if (stat.isDirectory()) { //conditing for identifying folders
+                if (stat.isDirectory()) { //conditing for identifying containers
                     result.Children.push(getFolder(itemPath, false));
                 }
                 else {
@@ -111,7 +111,7 @@ function dropDirectory(path) {
         var item = pth.join(path, list[i]);
         var stat = fs.statSync(item);
         if(item == "." || item == "..") {
-            // pass these files
+            // pass these leafs
         } else if(stat.isDirectory()) {
             // rmdir recursively
             dropDirectory(item);

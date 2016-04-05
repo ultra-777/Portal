@@ -1,0 +1,5 @@
+<div class="feeder" (window:scroll)="onScroll($event)" [ngStyle]="{'bottom': -scrollY}">
+        <div class="feeder-container">
+        <div *ngFor="#item of items;" class="feeder-item">{{item}}</div>
+        </div>
+</div>

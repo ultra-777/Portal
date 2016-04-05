@@ -25,7 +25,7 @@ function model(sequelize, DataTypes) {
                 schema: "fileSystem",
 
                 // define the table's name
-                tableName: 'Repositories',
+                tableName: 'Repository',
 
 
                 classMethods: {
@@ -254,7 +254,7 @@ function exec(executeQueryHandler){
         return;
 
     var query =
-        'insert into "fileSystem"."Repositories" ' +
+        'insert into "fileSystem"."Repository" ' +
         '("name", "location", "isOpen", "childFilesLimit", "childFoldersLimit", "created") select '+
         '\'' +
         repositoryName +
@@ -269,7 +269,7 @@ function exec(executeQueryHandler){
         config.repositoryChildFoldersLimit +
         ', ' +
         'current_timestamp ' +
-        'where not exists (select id from "fileSystem"."Repositories" limit 1);';
+        'where not exists (select id from "fileSystem"."Repository" limit 1);';
 
     executeQueryHandler(query)
         .error(function(err){

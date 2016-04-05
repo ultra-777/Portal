@@ -1,0 +1,69 @@
+<div class="explorer-tree" draggable="true">
+    <table class="nodeTable">
+        <tr>
+            <td class="headerCell">
+                <table class="nodeTable">
+                    <tr>
+                        <td>
+                            <img src="./app/explorer/loader16.gif" class="nodeSmallImage" *ngIf="data && data.isWaiting" />
+                        </td>
+                        <td class="nodeIndentSpaceCell" *ngIf="data && (!data.containers || !data.containers.length)"></td>
+                        <td *ngIf="data && data.containers && data.containers.length">
+                            <a class="nodeToggleRef" (click)="data && (data.isExpanded = !data.isExpanded)">
+                                <img
+                                        *ngIf="data && !data.isExpanded"
+                                        class="nodeToggleImage"
+                                        src="./app/explorer/expand.png"/>
+                                <img
+                                        *ngIf="data && data.isExpanded"
+                                        class="nodeToggleImage"
+                                        src="./app/explorer/collapse.png"/>
+                            </a>
+                        </td>
+                        <td class="nodeTitleCell">
+                            <!--<div [ngClass]="{'nodeTitleDiv': true, 'selected': (data && data.isSelected), 'dragging-over': isDraggingOver}" (click)="(data && data.isSelected = !data.isSelected)">-->
+                            <div [ngClass]="{'nodeTitleDiv': true, 'selected': (data && data.isSelected), 'dragging-over': isDraggingOver}" (click)="select($event)">
+                                <span class="{{'nodeContentTitle' + ((data && data.isSelected) ? ' selected' : '')}}">{{data?.name}}</span>
+                                <span class="nodeContentTitle leafsCounter" *ngIf="data && data.containers && data.containers.length && !data.isExpanded" >({{data?.containers?.length}})</span>
+                                <span class="dropdown nodeMenu" dropdown (on-toggle)="toggled($event)" *ngIf="data && data.isSelected">
+                                    <img
+                                            class="dropdown-toggle nodeMenuImage"
+                                            dropdownToggle
+                                            src="./app/explorer/ui-menu-icon.png"/>
+
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="delete()">Delete</a></li>
+                                        <li><a class="nodeMenuRef" (click)="newFolder()">New folder</a></li>
+                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="rename('rename folder', 'folder')">Rename</a></li>
+                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="upload()">Upload</a></li>
+                                    </ul>
+                                </span>
+                            </div>
+                        </td>
+
+                        <td class="nodeEndSpaceCell"></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr *ngIf="data && data.isExpanded && data.containers">
+            <td>
+                <table class="nodeTable">
+                    <tr>
+                        <td class="nodeIndentCell"></td>
+                        <td class="nodeChildLevelCell">
+                            <table class="nodeTable">
+                                <tr *ngFor="#child of data.containers | orderNodesByName">
+                                    <td>
+                                        <folder-node [nodePromise]="child.nodePromise"></folder-node>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+
+    </table>
+</div>

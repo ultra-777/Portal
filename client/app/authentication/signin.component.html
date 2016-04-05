@@ -1,0 +1,27 @@
+﻿<div style="height:100%;display: inline;">
+        <div style="display: inline;">
+            <div class="col-xs-offset-3 col-xs-6 col-md-offset-4 col-md-4">
+                <form (ngSubmit)="OnSubmit()" class="form-horizontal" autocomplete="off">
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="username">Username</label>
+                        <div class="col-md-8">
+                            <input type="text" id="username" class="form-control" [(ngModel)]="login" placeholder="login ..." autofocus>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="password">Password</label>
+                        <div class="col-md-8">
+                            <input type="password" id="password" class="form-control" [(ngModel)]="password" placeholder="password ...">
+                        </div>
+                    </div>
+                    <div class="text-center form-group">
+                        <button type="submit" class="btn btn-large btn-primary">Sign in</button>&nbsp; or&nbsp;
+                        <span class="link" (click)="OnSignup()">Sign up</span>
+                    </div>
+                    <div *ngIf="error" class="text-center text-danger">
+                        <strong>{{error}}</strong>
+                    </div>
+                </form>
+            </div>
+        </div>
+</div>

@@ -1,0 +1,45 @@
+﻿<div style="height:100%;display: inline;">
+        <div style="display: inline;">
+            <div class="col-xs-offset-3 col-xs-6 col-md-offset-4 col-md-4">
+                <form (ngSubmit)="OnSubmit()" class="form-horizontal" novalidate autocomplete="off">
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="username">Username</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="username" [(ngModel)]="login" placeholder="Username">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="password">Password</label>
+                        <div class="col-md-8">
+                            <input type="password" class="form-control" id="password" [(ngModel)]="password" placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="firstName">First Name</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="firstName" [(ngModel)]="firstName" placeholder="First Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="lastName">Last Name</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="lastName" [(ngModel)]="lastName" placeholder="Last Name">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="email">Email</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="email" [(ngModel)]="email" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="text-center form-group">
+                        <button type="submit" class="btn btn-large btn-primary">Sign up</button>&nbsp; or&nbsp;
+                        <span class="link" (click)="OnSignin()">Sign in</span>
+                    </div>
+                    <div *ngIf="error" class="text-center text-danger">
+                        <strong>{{error}}</strong>
+                    </div>
+                </form>
+            </div>
+        </div>
+</div>

@@ -21,7 +21,7 @@ function model(sequelize, DataTypes) {
                 schema: "fileSystem",
 
                 // define the table's name
-                tableName: 'Folders',
+                tableName: 'Folder',
 
                 instanceMethods: {
 
@@ -63,7 +63,7 @@ function configure(getObjectHandler){
 }
 
 function exec(executeQueryHandler){
-    executeQueryHandler('CREATE INDEX "IX_Parent" ON "fileSystem"."Folders" USING btree ("parentId")')
+    executeQueryHandler('CREATE INDEX "IX_Parent" ON "fileSystem"."Folder" USING btree ("parentId")')
     .error(function(err){
         console.error('Exception: %s (%s)', err.message, err.sql);
     });

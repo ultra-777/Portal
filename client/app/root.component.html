@@ -1,0 +1,19 @@
+﻿<div class="root" (window:scroll)="onScroll($event)" [ngClass] = "{'is-stuck': isStuck}">
+    <header></header>
+    <!--<feeder></feeder>-->
+    <table class="root-content">
+        <tr  class="header-cell">
+            <td></td>
+            <td>
+                <div class="header-offset"></div>
+            </td>
+        </tr>
+        <tr>
+            <td class="feeder-cell">
+            </td>
+            <td>
+                <router-outlet></router-outlet>
+            </td>
+        </tr>
+    </table>
+</div>
