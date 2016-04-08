@@ -9,7 +9,7 @@
                         </td>
                         <td class="nodeIndentSpaceCell" *ngIf="data && (!data.containers || !data.containers.length)"></td>
                         <td *ngIf="data && data.containers && data.containers.length">
-                            <a class="nodeToggleRef" (click)="data && (data.isExpanded = !data.isExpanded)">
+                            <a class="nodeToggleRef" (click)="expand($event)">
                                 <img
                                         *ngIf="data && !data.isExpanded"
                                         class="nodeToggleImage"
@@ -21,7 +21,7 @@
                             </a>
                         </td>
                         <td class="nodeTitleCell">
-                            <!--<div [ngClass]="{'nodeTitleDiv': true, 'selected': (data && data.isSelected), 'dragging-over': isDraggingOver}" (click)="(data && data.isSelected = !data.isSelected)">-->
+                            <!--<div [ngClass]="{'nodeTitleDiv': true, 'selected': (data && data.isSelected), 'dragging-over': isDraggingOver}" (click)="select($event)">-->
                             <div [ngClass]="{'nodeTitleDiv': true, 'selected': (data && data.isSelected), 'dragging-over': isDraggingOver}" (click)="select($event)">
                                 <span class="{{'nodeContentTitle' + ((data && data.isSelected) ? ' selected' : '')}}">{{data?.name}}</span>
                                 <span class="nodeContentTitle leafsCounter" *ngIf="data && data.containers && data.containers.length && !data.isExpanded" >({{data?.containers?.length}})</span>
@@ -32,10 +32,10 @@
                                             src="./app/explorer/ui-menu-icon.png"/>
 
                                     <ul class="dropdown-menu dropdown-menu-right">
-                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="delete()">Delete</a></li>
+                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="delete($event)">Delete</a></li>
                                         <li><a class="nodeMenuRef" (click)="newFolder()">New folder</a></li>
-                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="rename('rename folder', 'folder')">Rename</a></li>
-                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="upload()">Upload</a></li>
+                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="rename($event)">Rename</a></li>
+                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="upload($event)">Upload</a></li>
                                     </ul>
                                 </span>
                             </div>

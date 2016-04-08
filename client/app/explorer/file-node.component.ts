@@ -2,6 +2,7 @@
  * Created by Andrey on 27.03.2016.
  */
 import {Component, OnInit, Input, Output, OnChanges, EventEmitter, OnDestroy, ElementRef, ViewEncapsulation} from 'angular2/core';
+import {BrowserDomAdapter} from 'angular2/platform/browser'
 import {DROPDOWN_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
 import {MessageBoxService} from '../common/message-box/message-box.service';
 import {Subscription} from 'rxjs/Subscription';
@@ -13,32 +14,66 @@ import {ResultImpl} from "../common/result-impl";
 import {BytesPipe} from "./bytes-pipe";
 import {RenameComponent} from "./rename.component";
 import {RenameContext} from "./rename-context";
+import {NodeComponent} from "./node.component";
 
 
 @Component({
     selector: 'file-node',
     templateUrl: 'file-node.component.html',
     directives: [DROPDOWN_DIRECTIVES, FileNodeComponent],
-    providers: [MessageBoxService, ModalService],
+    providers: [MessageBoxService, ModalService, BrowserDomAdapter],
     inputs: ['nodePromise'],
     pipes:[BytesPipe],
     encapsulation: ViewEncapsulation.None,
     moduleId: module.id
 })
 
-export class FileNodeComponent implements OnInit, OnDestroy, OnChanges {
+export class FileNodeComponent extends NodeComponent implements OnInit, OnDestroy {
 
-    public data: Node;
-    public isDraggingOver: boolean;
+    private static _draggedImage: any;
 
     @Output()
     public onNodeSelected = new EventEmitter();
 
-    constructor(private _messageBox: MessageBoxService, private _modal: ModalService, private _element: ElementRef) {
-
+    constructor(messageBox: MessageBoxService, modal: ModalService, private _element: ElementRef, private _dom: BrowserDomAdapter) {
+        super(messageBox, modal);
     }
 
     ngOnInit() {
+        let local = this;
+        let domElement = this._element.nativeElement;
+        if (!FileNodeComponent._draggedImage){
+            let dragIcon = local._dom.defaultDoc().createElement('img');
+            dragIcon.src = './app/explorer/file.png';
+            dragIcon.width = 32;
+            dragIcon.height = 32;
+            FileNodeComponent._draggedImage = dragIcon;
+        }
+
+
+        domElement.addEventListener('dragstart', function (e) {
+            let node = local.data;
+            if (!node.parent)
+                return;
+            if (e.dataTransfer) {
+                e.dataTransfer.effectAllowed = 'move';
+                if(e.dataTransfer.setDragImage) {
+                    e.dataTransfer.setDragImage(FileNodeComponent._draggedImage, -10, -10);
+                }
+                NodeComponent.draggedNode = node;
+            }
+            e.stopPropagation();
+            //console.log('--FileNodeComponent.dragstart: ' + (node ? (node.id + ' - ' + node.name) : 'none'));
+        });
+
+        domElement.addEventListener('dragend', function(e){
+            let node = local.data;
+            NodeComponent.draggedNode = null;
+            e.stopPropagation();
+            //console.log('--FileNodeComponent.dragend: ' + (node ? node.name : 'none'));
+        });
+
+
 
         console.log('FileNodeComponent.ngOnInit');
     }
@@ -46,79 +81,4 @@ export class FileNodeComponent implements OnInit, OnDestroy, OnChanges {
     ngOnDestroy() {
         console.log('FileNodeComponent.ngOnDestroy');
     }
-
-    ngOnChanges(changes) {
-        if (changes){
-            for (let key in changes){
-                let change = changes[key];
-                let newValue = change.currentValue;
-                let local = this;
-                switch (key){
-                    case 'nodePromise':
-                        if (newValue){
-                            newValue.then(function(data) {
-                                local.data = data;
-                                local.initialize(data);
-                            });
-                        }
-                        else
-                            local.initialize(null);
-
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    }
-
-    initialize(data: Node){
-        this.data = data;
-    }
-
-    setDraggingOver(draggingNode: Node) {
-        if (draggingNode) {
-            this.isDraggingOver = true;
-        }
-        else {
-            this.isDraggingOver = false;
-        }
-    }
-
-    public delete(){
-        let local = this;
-        this.data.drop()
-            .then(function(error){
-                if (error)
-                    local._messageBox.showOk(
-                        'Exception',
-                        error
-                    );
-            });
-    }
-
-    public rename() {
-        let siblings = this.data.getNeighbourNames();
-        let context = new RenameContext(this.data.name, siblings);
-        let dialog = this._modal.open(RenameComponent, context);
-        let local = this;
-        dialog.then((resultPromise) => {
-            resultPromise.result.then((result: ResultImpl<string>) => {
-                if(result.succeeded) {
-                    local.data.rename(result.data)
-                        .then(function (error) {
-                            if (error) {
-                                local._messageBox.showOk(
-                                    'Exception',
-                                    error
-                                );
-                            }
-                            else{
-                                local.data.refreshParent();
-                            }
-                        });
-                }
-            });
-        });
-    };
 }

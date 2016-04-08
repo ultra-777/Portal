@@ -7,21 +7,8 @@
                         <td>
                             <img src="./app/explorer/loader16.gif" class="nodeSmallImage" *ngIf="data && data.isWaiting" />
                         </td>
-                        <td class="nodeIndentSpaceCell" *ngIf="data && (!data.containers || !data.containers.length)"></td>
-                        <td *ngIf="data && data.containers && data.containers.length">
-                            <a class="nodeToggleRef" (click)="data && (data.isExpanded = !data.isExpanded)">
-                                <img
-                                        *ngIf="data && !data.isExpanded"
-                                        class="nodeToggleImage"
-                                        src="./app/explorer/expand.png"/>
-                                <img
-                                        *ngIf="data && data.isExpanded"
-                                        class="nodeToggleImage"
-                                        src="./app/explorer/collapse.png"/>
-                            </a>
-                        </td>
                         <td class="nodeTitleCell">
-                            <div [ngClass]="{'nodeTitleDiv': true, 'selected': (data && data.isSelected), 'dragging-over': isDraggingOver}" (click)="(data && data.isSelected = !data.isSelected)">
+                            <div [ngClass]="{'nodeTitleDiv': true, 'selected': (data && data.isSelected)}" (click)="select($event)">
                                 <span class="{{'nodeContentTitle' + ((data && data.isSelected) ? ' selected' : '')}}">{{data?.name}}</span>
                                 <span class="nodeContentTitle leafsCounter">({{data?.size | bytes}})</span>
                                 <span class="dropdown nodeMenu" dropdown *ngIf="data && data.isSelected">
@@ -31,8 +18,8 @@
                                             src="./app/explorer/ui-menu-icon.png"/>
 
                                     <ul class="dropdown-menu dropdown-menu-right">
-                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="delete()">Delete</a></li>
-                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="rename('rename folder', 'folder')">Rename</a></li>
+                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="delete($event)">Delete</a></li>
+                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="rename($event)">Rename</a></li>
                                     </ul>
                                 </span>
                             </div>

@@ -186,15 +186,28 @@ export class Node {
             Node._service.moveChild(local.id, newChild.id).then(function (result) {
                 if (result.succeeded){
                     if (newChild.parent) {
-                        let dropResult = local.dropCollectionChild(newChild.parent.containers, newChild);
+                        let isLeafSelectionRequired = !newChild.isContainer && newChild.isSelected;
+                        let sourceOwnerCollection =
+                            newChild.isContainer ?
+                                newChild.parent.containers : newChild.parent.leafs;
+                        let dropResult = Node.dropCollectionChild(sourceOwnerCollection, newChild);
                         if (dropResult) {
-                            local.containers.push(newChild);
+                            let targetOwnerCollection =
+                                newChild.isContainer ?
+                                    local.containers : local.leafs;
+                            targetOwnerCollection.push(newChild);
+
                             newChild.parent = local;
-                            local.isSelected = true;
+                            if (newChild.isContainer)
+                                newChild.isSelected = true;
+                            else {
+                                local.isSelected = true;
+                                if (isLeafSelectionRequired)
+                                    local.selectedLeaf = newChild;
+                            }
 
                             if (!local.isExpanded)
                                 local.isExpanded = true;
-
                         }
                     }
                     resolve(null);
@@ -217,12 +230,12 @@ export class Node {
                     if (parent) {
                         if (local.isContainer) {
                             if (parent.containers) {
-                                local.dropCollectionChild(parent.containers, local);
+                                Node.dropCollectionChild(parent.containers, local);
                             }
                         }
                         else {
                             if (parent.leafs) {
-                                local.dropCollectionChild(parent.leafs, local);
+                                Node.dropCollectionChild(parent.leafs, local);
                             }
                         }
                     }
@@ -412,40 +425,15 @@ export class Node {
         }
     }
 
-    dropCollectionChild(collection: Array<Node>, target: Node){
-        var targetIndex = -1;
-        for (var i = 0; i < collection.length; i++){
-            var candidate = collection[i];
-            if (candidate === target){
-                targetIndex = i;
-                break;
-            }
-        }
-        if (targetIndex > -1) {
-            collection.splice(targetIndex, 1);
-            target.parent = null;
-            return true;
-        }
-        return false;
-    }
-
-    compareChildren (a: Node, b: Node): number {
-        if (a.name.toLowerCase() < b.name.toLowerCase())
-            return -1;
-        if (a.name.toLowerCase() > b.name.toLowerCase())
-            return 1;
-        return 0;
-    }
-
     refresh() {
-        this.containers = this.cloneArray(this.containers);
-        this.leafs = this.cloneArray(this.leafs);
+        this.containers = Node.cloneArray(this.containers);
+        this.leafs = Node.cloneArray(this.leafs);
     }
 
     refreshParent() {
         if (this.parent){
-            this.parent.containers = this.cloneArray(this.parent.containers);
-            this.parent.leafs = this.cloneArray(this.parent.leafs);
+            this.parent.containers = Node.cloneArray(this.parent.containers);
+            this.parent.leafs = Node.cloneArray(this.parent.leafs);
         }
     }
 
@@ -470,7 +458,7 @@ export class Node {
         return children;
     }
 
-    private cloneArray(source: Array<Node>) : Array<Node>{
+    private static cloneArray(source: Array<Node>) : Array<Node>{
         if (!source)
             return null;
         let result = [];
@@ -494,5 +482,30 @@ export class Node {
                     siblings.push(sibling.name.toLowerCase());
             }
         }
+    }
+
+    private static dropCollectionChild(collection: Array<Node>, target: Node){
+        var targetIndex = -1;
+        for (var i = 0; i < collection.length; i++){
+            var candidate = collection[i];
+            if (candidate === target){
+                targetIndex = i;
+                break;
+            }
+        }
+        if (targetIndex > -1) {
+            collection.splice(targetIndex, 1);
+            target.parent = null;
+            return true;
+        }
+        return false;
+    }
+
+    private static compareChildren (a: Node, b: Node): number {
+        if (a.name.toLowerCase() < b.name.toLowerCase())
+            return -1;
+        if (a.name.toLowerCase() > b.name.toLowerCase())
+            return 1;
+        return 0;
     }
 }

@@ -21,6 +21,7 @@ import {UploadHandler} from "./upload-handler";
 import {NodeDto} from "./node.dto";
 import {BytesPipe} from "./bytes-pipe";
 import {UploadContext} from "./upload-context";
+import {NodeComponent} from "./node.component";
 
 
 @Component({
@@ -34,12 +35,9 @@ import {UploadContext} from "./upload-context";
     moduleId: module.id
 })
 
-export class FolderNodeComponent implements OnInit, OnDestroy, OnChanges {
+export class FolderNodeComponent extends NodeComponent implements OnInit, OnDestroy {
 
-    public data: Node;
     public isDraggingOver: boolean;
-    private _isOpen: boolean;
-    private static _draggedNode: Node;
     private static _draggedImage: any;
 
     @Output()
@@ -47,8 +45,8 @@ export class FolderNodeComponent implements OnInit, OnDestroy, OnChanges {
 
     private _selectionSubscription: Subscription = null;
 
-    constructor(private _messageBox: MessageBoxService, private _modal: ModalService, private _element: ElementRef, private _dom: BrowserDomAdapter) {
-
+    constructor(messageBox: MessageBoxService, modal: ModalService, private _element: ElementRef, private _dom: BrowserDomAdapter) {
+        super(messageBox, modal);
     }
 
     ngOnInit() {
@@ -79,8 +77,8 @@ export class FolderNodeComponent implements OnInit, OnDestroy, OnChanges {
         }
 
         let checkDropAbility = function(node){
-            if (FolderNodeComponent._draggedNode) {
-                let sourceNodeId = FolderNodeComponent._draggedNode.id;
+            if (NodeComponent.draggedNode) {
+                let sourceNodeId = NodeComponent.draggedNode.id;
                 let isAncestor = false;
                 node.iterateAncestors(true, function (ancestor, level) {
                     if (ancestor.id == sourceNodeId) {
@@ -88,7 +86,7 @@ export class FolderNodeComponent implements OnInit, OnDestroy, OnChanges {
                         return true;
                     }
                 });
-                if (FolderNodeComponent._draggedNode.parent === node)
+                if (NodeComponent.draggedNode.parent === node)
                     isAncestor = true;
                 return (!isAncestor);
             }
@@ -103,7 +101,7 @@ export class FolderNodeComponent implements OnInit, OnDestroy, OnChanges {
                 if(e.dataTransfer.setDragImage) {
                     e.dataTransfer.setDragImage(FolderNodeComponent._draggedImage, -10, -10);
                 }
-                FolderNodeComponent._draggedNode = node;
+                NodeComponent.draggedNode = node;
             }
             e.stopPropagation();
             //console.log('--FolderNodeComponent.dragstart: ' + (node ? (node.id + ' - ' + node.name) : 'none'));
@@ -111,7 +109,7 @@ export class FolderNodeComponent implements OnInit, OnDestroy, OnChanges {
 
         domElement.addEventListener('dragend', function(e){
             let node = local.data;
-            FolderNodeComponent._draggedNode = null;
+            NodeComponent.draggedNode = null;
             e.stopPropagation();
             //console.log('--FolderNodeComponent.dragend: ' + (node ? node.name : 'none'));
         });
@@ -160,8 +158,8 @@ export class FolderNodeComponent implements OnInit, OnDestroy, OnChanges {
             if (node){
                 local.setDraggingOver(null);
                 if (checkDropAbility(node)) {
-                    if (FolderNodeComponent._draggedNode) {
-                        node.moveChild(FolderNodeComponent._draggedNode)
+                    if (NodeComponent.draggedNode) {
+                        node.moveChild(NodeComponent.draggedNode)
                             .then(function (err) {
                                 if (!err) {
                                     node.refresh();
@@ -175,7 +173,7 @@ export class FolderNodeComponent implements OnInit, OnDestroy, OnChanges {
                 }
             }
 
-            FolderNodeComponent._draggedNode = null;
+            NodeComponent.draggedNode = null;
 
             if (e.stopPropagation)
                 e.stopPropagation(); // stops the browser from redirecting.
@@ -194,33 +192,7 @@ export class FolderNodeComponent implements OnInit, OnDestroy, OnChanges {
         console.log('FolderNodeComponent.ngOnDestroy');
     }
 
-    ngOnChanges(changes) {
-        if (changes){
-            for (let key in changes){
-                let change = changes[key];
-                let newValue = change.currentValue;
-                let local = this;
-                switch (key){
-                    case 'nodePromise':
-                        if (newValue){
-                            newValue.then(function(data) {
-                                local.data = data;
-                                local.initialize(data);
-                            });
-                        }
-                        else
-                            local.initialize(null);
-
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    }
-
-    initialize(data: Node){
-        this.data = data;
+    initialize(){
         this.dropSelectionSubscription();
         if (this.data)
             this._selectionSubscription = this.data.selectedNode$.subscribe(node => this.onNodeSelectionHandler(node));
@@ -235,32 +207,10 @@ export class FolderNodeComponent implements OnInit, OnDestroy, OnChanges {
         }
     }
 
-    get isOpen(): boolean{
-        return this._isOpen;
-    }
-
-    set isOpen(newValue: boolean){
-        if (this._isOpen != newValue){
-            this._isOpen = newValue;
-            console.log('--is open: ' + newValue);
-        }
-    }
-
-    public select(event){
-        if (!this.data)
-            return;
-        this.data.isSelected = !this.data.isSelected;
-    }
-
-    public toggled(open:boolean):void {
-        console.log('Dropdown is now: ', open);
-    }
-
-
     public newFolder() {
         let siblings = this.data.getChildrenNames();
         let context = new NewFolderContext(siblings);
-        let dialog = this._modal.open(NewFolderComponent, context);
+        let dialog = this.modal.open(NewFolderComponent, context);
         let local = this;
         dialog.then((resultPromise) => {
             resultPromise.result.then((result: ResultImpl<string>) => {
@@ -268,7 +218,7 @@ export class FolderNodeComponent implements OnInit, OnDestroy, OnChanges {
                     local.data.addContainer(result.data)
                         .then(function (error) {
                             if (error) {
-                                local._messageBox.showOk(
+                                local.messageBox.showOk(
                                     'Exception',
                                     error
                                 );
@@ -282,47 +232,10 @@ export class FolderNodeComponent implements OnInit, OnDestroy, OnChanges {
         });
     };
 
-    public delete(){
-        let local = this;
-        this.data.drop()
-            .then(function(error){
-                if (error)
-                    local._messageBox.showOk(
-                        'Exception',
-                        error
-                    );
-            });
-    }
-
-    public rename() {
-        let siblings = this.data.getNeighbourNames();
-        let context = new RenameContext(this.data.name, siblings);
-        let dialog = this._modal.open(RenameComponent, context);
-        let local = this;
-        dialog.then((resultPromise) => {
-            resultPromise.result.then((result: ResultImpl<string>) => {
-                if(result.succeeded) {
-                    local.data.rename(result.data)
-                        .then(function (error) {
-                            if (error) {
-                                local._messageBox.showOk(
-                                    'Exception',
-                                    error
-                                );
-                            }
-                            else{
-                                local.data.refreshParent();
-                            }
-                        });
-                }
-            });
-        });
-    };
-
-    public upload(){
+    public upload(event){
         let siblings = this.data.getChildrenNames();
         let context = new UploadContext(siblings);
-        let dialog = this._modal.open(UploadComponent, context);
+        let dialog = this.modal.open(UploadComponent, context);
         let local = this;
         dialog.then((resultPromise) => {
             resultPromise.result.then((result: ResultImpl<File>) => {
@@ -332,7 +245,7 @@ export class FolderNodeComponent implements OnInit, OnDestroy, OnChanges {
                     uploader.result.then((result: ResultImpl<NodeDto>) => {
                         if (result.succeeded) {
                             let bytesPipe = new BytesPipe();
-                            local._messageBox.showOk(
+                            local.messageBox.showOk(
                                 'Name: ' + result.data.name + '<br/>' +
                                 'Size: ' + uploader.source.size + '<br/>' +
                                 'Duration: ' + uploader.duration + ' sec.' + '<br/>' +
@@ -343,7 +256,7 @@ export class FolderNodeComponent implements OnInit, OnDestroy, OnChanges {
 
                         }
                         else{
-                            local._messageBox.showOk(JSON.stringify(result.data), 'Exception');
+                            local.messageBox.showOk(JSON.stringify(result.data), 'Exception');
                         }
                     });
                 }
