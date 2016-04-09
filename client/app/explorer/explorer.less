@@ -1,123 +1,63 @@
 
 .explorer-tree {
 
-  .nodeTable {
-    width: 100%;
-    cellspacing: 0;
-    cellpadding: 0;
+  .title-container{
+    display: flex;
+    height: 24px;
+    padding: 3px 0;
   }
 
-  .nodeTitleDiv {
+  .waiting-image-container {
+    height:16px;
+    padding: 0;
+    margin: 0 3px;
+    display: inline-flex;
+  }
+
+  .waiting-image {
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+  }
+
+  .expand-toggle-container{
+    display: inline-flex;
+  }
+
+  .expand-toggle{
+    padding: 6px 2px 0 2px;
+  }
+
+  .expand-toggle-image {
+    width: 11px;
+    height: 11px;
+    margin: 0;
+    display: block;
+    vertical-align: middle;
+  }
+
+  .title-line{
     border-radius: 3px;
     padding: 0;
     height: 22px;
     border: 1px solid transparent;
     margin: 0 5px 0 0;
-    padding: 0 0 0 5px;
+    padding: 2px 0 0 5px;
     outline: none;
     width: 100%;
     cursor: pointer;
     white-space: nowrap;
   }
 
-  .nodeTitleDiv.selected {
+  .title-line.selected {
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fffff9), color-stop(47%, #fff2cf), color-stop(100%, #fef4d2));
     background: -ms-linear-gradient(top, #fffff9 0%, #fff2cf 47%, #fef4d2 100%);
     border-color: #ddcf9b;
   }
 
-  .nodeTitleCell {
-    width: 100%;
-  }
-
-  .nodeMenu {
-    background: transparent;
-    float: right;
-    margin: 0 5px 0 0;
-  }
-
-  .nodeIndentSpaceCell {
-    min-width: 16px;
-    max-width: 16px;
-  }
-
-  .nodeSmallImage {
-    max-width: 16px;
-    max-height: 16px;
-    padding: 0;
-    margin: 0;
-    background: transparent;
-  }
-
-  .nodeMenuImage {
-    max-width: 16px;
-    max-height: 16px;
-    padding: 2px 0 0 0;
-    margin: 0 0 3px 0;
-    background: transparent;
-  }
-
-  a.nodeToggleRef {
-    text-decoration: none;
-    background: transparent;
-    vertical-align: middle;
-    display: block;
-    min-width: 16px;
-    padding: 0;
-    cursor: pointer;
-  }
-
-  a.nodeMenuRef {
-    cursor: pointer;
-  }
-
-  .nodeToggleImage {
-    width: 11px;
-    height: 11px;
-    margin: 2px 0 0 0;
-    display: block;
-    vertical-align: middle;
-  }
-
-  .nodeContentSpan {
-    white-space: nowrap;
-    background: transparent;
-    vertical-align: top;
-    max-height: 16px;
-    margin: 0;
-  }
-
-  .nodeContentTitle {
-    font-family: verdana;
-    font-size: 13px;
-  }
-
-  .nodeContentTitle.leafsCounter {
-    color: #394bab;
-    font-weight: bold;
-  }
-
-  .nodeContentTitle.selected {
-    font-weight: bold;
-  }
-
-  .nodeIndentCell {
-    min-width: 16px;
-  }
-
-  .nodeChildLevelCell {
-    width: 100%;
-  }
-
-  .nodeEndSpaceCell {
-    min-width: 10px;
-  }
-
-  .dragging{
-    border: 1px solid red !important;
-  }
-
-  .dragging-over {
+  .title-line.dragging-over {
     border: 1px solid #ddcf9b !important;
     background: repeating-linear-gradient(
             45deg,
@@ -128,6 +68,53 @@
     );
   }
 
+  .title-content {
+    padding: 0 3px;
+    font-family: verdana;
+    font-size: 13px;
+  }
+
+  .title-content:hover {
+    font-style: italic;
+    text-shadow: 2px 2px 5px #aaa;
+  }
+
+  .title-content.numbers {
+    color: #394bab;
+    font-weight: bold;
+    margin-top: -1px;
+  }
+
+  .menu-toggle{
+    margin: 0 3px;
+    vertical-align: middle;
+  }
+
+  .menu-image {
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+  }
+
+  .menu-item {
+    cursor: pointer;
+    border-style: solid;
+    border-color: transparent;
+    border-width: 1px 0;
+  }
+
+  .menu-item:hover {
+    font-style: italic;
+    background: transparent;
+    border-color: lightgrey;
+    text-shadow: 2px 2px 5px #aaa;
+  }
+
+  .containers-space {
+    padding-left: 20px;
+  }
 }
 
 .explorer-new-folder{

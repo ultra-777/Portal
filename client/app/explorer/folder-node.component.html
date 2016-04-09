@@ -1,69 +1,54 @@
 <div class="explorer-tree" draggable="true">
-    <table class="nodeTable">
-        <tr>
-            <td class="headerCell">
-                <table class="nodeTable">
-                    <tr>
-                        <td>
-                            <img src="./app/explorer/loader16.gif" class="nodeSmallImage" *ngIf="data && data.isWaiting" />
-                        </td>
-                        <td class="nodeIndentSpaceCell" *ngIf="data && (!data.containers || !data.containers.length)"></td>
-                        <td *ngIf="data && data.containers && data.containers.length">
-                            <a class="nodeToggleRef" (click)="expand($event)">
-                                <img
-                                        *ngIf="data && !data.isExpanded"
-                                        class="nodeToggleImage"
-                                        src="./app/explorer/expand.png"/>
-                                <img
-                                        *ngIf="data && data.isExpanded"
-                                        class="nodeToggleImage"
-                                        src="./app/explorer/collapse.png"/>
-                            </a>
-                        </td>
-                        <td class="nodeTitleCell">
-                            <!--<div [ngClass]="{'nodeTitleDiv': true, 'selected': (data && data.isSelected), 'dragging-over': isDraggingOver}" (click)="select($event)">-->
-                            <div [ngClass]="{'nodeTitleDiv': true, 'selected': (data && data.isSelected), 'dragging-over': isDraggingOver}" (click)="select($event)">
-                                <span class="{{'nodeContentTitle' + ((data && data.isSelected) ? ' selected' : '')}}">{{data?.name}}</span>
-                                <span class="nodeContentTitle leafsCounter" *ngIf="data && data.containers && data.containers.length && !data.isExpanded" >({{data?.containers?.length}})</span>
-                                <span class="dropdown nodeMenu" dropdown (on-toggle)="toggled($event)" *ngIf="data && data.isSelected">
-                                    <img
-                                            class="dropdown-toggle nodeMenuImage"
-                                            dropdownToggle
-                                            src="./app/explorer/ui-menu-icon.png"/>
+    <div class="title-container">
+        <div class="waiting-image-container">
+            <img src="./app/explorer/loader16.gif" class="waiting-image" *ngIf="data?.isWaiting" />
+        </div>
+        <div class="expand-toggle-container" *ngIf="data && data.containers && data.containers.length">
+            <a class="expand-toggle" (click)="expand($event)">
+                <img
+                    *ngIf="data && !data.isExpanded"
+                    class="expand-toggle-image"
+                    src="./app/explorer/expand.png"/>
+                <img
+                    *ngIf="data && data.isExpanded"
+                    class="expand-toggle-image"
+                    src="./app/explorer/collapse.png"/>
+            </a>
+        </div>
 
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="delete($event)">Delete</a></li>
-                                        <li><a class="nodeMenuRef" (click)="newFolder()">New folder</a></li>
-                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="rename($event)">Rename</a></li>
-                                        <li *ngIf="data && !data.isRoot"><a class="nodeMenuRef" (click)="upload($event)">Upload</a></li>
-                                    </ul>
-                                </span>
-                            </div>
-                        </td>
+        <div [ngClass]="{'title-line': true, 'selected': (data && data.isSelected), 'dragging-over': isDraggingOver}" (click)="select($event)">
+            <table style="width: 100%;white-space: nowrap;">
+                <tr>
+                    <td>
+                        <div class="{{'title-content' + ((data && data.isSelected) ? ' selected' : '')}}" >{{data?.name}}</div>
+                    </td>
+                    <td>
+                        <div class="title-content numbers" *ngIf="data && data.containers && data.containers.length && !data.isExpanded" >({{data?.containers?.length}})</div>
+                    </td>
+                    <td style="width: 99%;">
+                    </td>
+                    <td>
+                        <div class="menu-toggle dropdown" dropdown (on-toggle)="toggled($event)" *ngIf="data?.isSelected">
+                            <img
+                                class="menu-image dropdown-toggle"
+                                dropdownToggle
+                                src="./app/explorer/ui-menu-icon.png"/>
 
-                        <td class="nodeEndSpaceCell"></td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-        <tr *ngIf="data && data.isExpanded && data.containers">
-            <td>
-                <table class="nodeTable">
-                    <tr>
-                        <td class="nodeIndentCell"></td>
-                        <td class="nodeChildLevelCell">
-                            <table class="nodeTable">
-                                <tr *ngFor="#child of data.containers | orderNodesByName">
-                                    <td>
-                                        <folder-node [nodePromise]="child.nodePromise"></folder-node>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-
-    </table>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li *ngIf="data && !data.isRoot"><a class="menu-item" (click)="delete($event)">Delete</a></li>
+                                <li><a class="menu-item" (click)="newFolder()">New folder</a></li>
+                                <li *ngIf="data && !data.isRoot"><a class="menu-item" (click)="rename($event)">Rename</a></li>
+                                <li *ngIf="data && !data.isRoot"><a class="menu-item" (click)="upload($event)">Upload</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="containers-space" *ngIf="data && data.isExpanded && data.containers">
+        <div *ngFor="#child of data.containers | orderNodesByName">
+            <folder-node [nodePromise]="child.nodePromise"></folder-node>
+        </div>
+    </div>
 </div>

@@ -122,7 +122,7 @@ export class FolderNodeComponent extends NodeComponent implements OnInit, OnDest
                     local.setDraggingOver(node);
             }
             e.stopPropagation();
-            //console.log('--FolderNodeComponent.dragenter: ' + (node ? node.name : 'none'));
+            console.log('--FolderNodeComponent.dragenter: ' + (node ? node.name : 'none'));
         },
         false);
 
@@ -131,7 +131,7 @@ export class FolderNodeComponent extends NodeComponent implements OnInit, OnDest
             var node = local.data;
             local.setDraggingOver(null);
             e.stopPropagation();
-            //console.log('--FolderNodeComponent.dragleave: ' + (node ? node.name : 'none'));
+            console.log('--FolderNodeComponent.dragleave: ' + (node ? node.name : 'none'));
         },
         false);
 
@@ -152,7 +152,7 @@ export class FolderNodeComponent extends NodeComponent implements OnInit, OnDest
         false);
 
         domElement.addEventListener('drop', function(e){
-
+            applyChildPointerEvents(e.target, true);
             let node = local.data;
 
             if (node){
