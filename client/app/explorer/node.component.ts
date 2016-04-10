@@ -47,7 +47,12 @@ export class NodeComponent implements OnChanges{
     public select(event){
         if (!this.data)
             return;
-        this.data.isSelected = !this.data.isSelected;
+        if (!this.data.isSelected) {
+            this.data.isSelected = true;
+        }
+        else {
+            this.data.isExpanded = !this.data.isExpanded;
+        }
     }
 
     public expand(event){

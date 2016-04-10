@@ -1,9 +1,10 @@
 /**
  * Created by Andrey on 27.03.2016.
  */
-import {Component, Output, OnInit, Input, OnChanges, EventEmitter, OnDestroy, ElementRef, ViewEncapsulation} from 'angular2/core';
+import {Component, Output, OnInit, Input, OnChanges, EventEmitter, OnDestroy, ElementRef, NgZone, ViewEncapsulation} from 'angular2/core';
 import {BrowserDomAdapter} from 'angular2/platform/browser'
 import {DROPDOWN_DIRECTIVES} from 'ng2-bootstrap/ng2-bootstrap';
+import { PROGRESSBAR_DIRECTIVES } from 'ng2-bootstrap/ng2-bootstrap';
 import {MessageBoxService} from '../common/message-box/message-box.service';
 import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
@@ -27,7 +28,7 @@ import {NodeComponent} from "./node.component";
 @Component({
     selector: 'folder-node',
     templateUrl: 'folder-node.component.html',
-    directives: [DROPDOWN_DIRECTIVES, FolderNodeComponent],
+    directives: [DROPDOWN_DIRECTIVES, FolderNodeComponent, PROGRESSBAR_DIRECTIVES],
     providers: [MessageBoxService, ModalService, BrowserDomAdapter],
     inputs: ['nodePromise'],
     pipes:[OrderNodesByNamePipe],
@@ -39,13 +40,16 @@ export class FolderNodeComponent extends NodeComponent implements OnInit, OnDest
 
     public isDraggingOver: boolean;
     private static _draggedImage: any;
+    public uploadPercent: number;
+    public isUploading: boolean;
 
     @Output()
     public onNodeSelected = new EventEmitter();
 
     private _selectionSubscription: Subscription = null;
+    private _uploadPercentSubscription: Subscription = null;
 
-    constructor(messageBox: MessageBoxService, modal: ModalService, private _element: ElementRef, private _dom: BrowserDomAdapter) {
+    constructor(messageBox: MessageBoxService, modal: ModalService, private _element: ElementRef, private _zone: NgZone, private _dom: BrowserDomAdapter) {
         super(messageBox, modal);
     }
 
@@ -194,8 +198,9 @@ export class FolderNodeComponent extends NodeComponent implements OnInit, OnDest
 
     initialize(){
         this.dropSelectionSubscription();
-        if (this.data)
+        if (this.data) {
             this._selectionSubscription = this.data.selectedNode$.subscribe(node => this.onNodeSelectionHandler(node));
+        }
     }
 
     setDraggingOver(draggingNode: Node) {
@@ -241,8 +246,13 @@ export class FolderNodeComponent extends NodeComponent implements OnInit, OnDest
             resultPromise.result.then((result: ResultImpl<File>) => {
                 if(result.succeeded) {
 
+                    local.uploadPercent = 0;
+                    local.isUploading = true;
                     let uploader = local.data.addLeaf(result.data, context.name);
+                    let subscription = uploader.percent$.subscribe(newValue => this.onUploadPercentChangeHandler(newValue));
                     uploader.result.then((result: ResultImpl<NodeDto>) => {
+                        subscription.unsubscribe();
+                        local.isUploading = false;
                         if (result.succeeded) {
                             let bytesPipe = new BytesPipe();
                             local.messageBox.showOk(
@@ -266,6 +276,17 @@ export class FolderNodeComponent extends NodeComponent implements OnInit, OnDest
 
     private onNodeSelectionHandler(node: Node){
         this.onNodeSelected.emit(node);
+    }
+
+    private onUploadPercentChangeHandler(value: number){
+        let local = this;
+        let newValue = Number((value * 100).toFixed(0));
+        if (newValue != local.uploadPercent) {
+            this._zone.run(() => {
+                local.uploadPercent = newValue;
+                console.log('upload percent: ' + local.uploadPercent);
+            });
+        }
     }
 
     private dropSelectionSubscription(){

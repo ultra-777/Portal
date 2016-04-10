@@ -18,6 +18,9 @@ export class UploadHandler {
     private _duration: number;
     private _result: Promise<ResultImpl<NodeDto>>;
 
+    public percent$: Observable<number>;
+    private _percentObserver: ReplaySubject<number>;
+
     public get parentNodeId() : number{
         return this._parentNodeId;
     }
@@ -57,6 +60,8 @@ export class UploadHandler {
     constructor(private _source: File, private _parentNodeId: number) {
         if (_source)
             this._size = _source.size;
+        this._percentObserver = new ReplaySubject<number>(1);
+        this.percent$ = this._percentObserver;
     }
 
     public static transfer(file: File, parentNodeId: number, name: string = null) : UploadHandler{
@@ -93,14 +98,15 @@ export class UploadHandler {
                 let progress = event.lengthComputable ? event.loaded / event.total : 0;
 
                 handler._percent = progress;
-                console.log('--percent: ' + handler._percent);
+                handler._percentObserver.next(handler._percent);
+                //console.log('--percent: ' + handler._percent);
                 let dd = new Date();
                 let currentTime = dd.getTime();
                 let interval = currentTime - lastTime;
                 let transferred = (event.lengthComputable ? event.loaded : 0);
                 let transferredBytes = transferred - handler._transferred;
                 handler._transferred = transferred;
-                console.log('--transferred: ' + handler._transferred);
+                //console.log('--transferred: ' + handler._transferred);
                 if (interval >= (1000)) {
                     lastTime = currentTime;
                     handler._rate = transferredBytes * 1000 / interval;

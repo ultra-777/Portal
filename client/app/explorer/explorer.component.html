@@ -1,15 +1,14 @@
-<div style="padding: 50px;">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4 mesh-cell section" style="height:500px;overflow-y: auto;border: solid 1px lightgray;">
-                <!--<explorer-node data-node-promise="vm.nodePromise" data-on-selection-changed="vm.onSelectedFolderChanged(vm.id)"></explorer-node>-->
-                <folder-node [nodePromise]="nodePromise" (onNodeSelected)="onNodeSelected($event)"></folder-node>
-            </div>
-            <div class="col-lg-4 mesh-cell section" style="height:500px;overflow-y: auto;border: solid 1px lightgray;">
-                <div *ngIf="current && current.leafs">
-                    <div *ngFor="#child of current.leafs | orderNodesByName">
-                        <file-node [nodePromise]="child.nodePromise"></file-node>
-                    </div>
+<div class="explorer-container">
+    <div class="explorer-cell folder-cell">
+        <div class="explorer-frame">
+            <folder-node [nodePromise]="nodePromise" (onNodeSelected)="onNodeSelected($event)"></folder-node>
+        </div>
+    </div>
+    <div class="explorer-cell">
+        <div class="explorer-frame">
+            <div *ngIf="current && current.leafs">
+                <div *ngFor="#child of current.leafs | orderNodesByName">
+                    <file-node [nodePromise]="child.nodePromise"></file-node>
                 </div>
             </div>
         </div>
