@@ -280,7 +280,8 @@ export class FolderNodeComponent extends NodeComponent implements OnInit, OnDest
 
     private onUploadPercentChangeHandler(value: number){
         let local = this;
-        let newValue = Number((value * 100).toFixed(0));
+        //let newValue =  Number((value * 100).toFixed(0));
+        let newValue =  Math.floor(value * 100);
         if (newValue != local.uploadPercent) {
             this._zone.run(() => {
                 local.uploadPercent = newValue;
