@@ -89,9 +89,11 @@ gulp.task('compile-application-development', function () {
 gulp.task('compile-application-production', function () {
     return gulp.src(config.source.ts)
         .pipe(ts(tscConfig.compilerOptions))
+            /*
         .pipe(uglify({
             mangle: false
         }))
+        */
     .pipe(gulp.dest(config.target.getAppFolderPath()));
 });
 

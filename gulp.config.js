@@ -78,12 +78,27 @@
                 },
                 production: {
                     js: [
+                        /*
                         node_modules + '/angular2/es6/dev/src/testing/shims_for_IE.js',
                         node_modules + '/angular2/bundles/angular2-polyfills.min.js',
                         node_modules + '/systemjs/dist/system.js',
                         node_modules + '/rxjs/bundles/Rx.min.js',
                         node_modules + '/angular2/bundles/angular2.min.js',
                         node_modules + '/angular2/bundles/router.min.js',
+                        node_modules + '/angular2/bundles/http.min.js',
+                        node_modules + '/jquery/dist/jquery.min.js',
+                        node_modules + '/ms-signalr-client/jquery.signalr-2.2.0.min.js',
+                        node_modules + '/moment/min/moment.min.js',
+                        node_modules + '/ng2-bootstrap/bundles/ng2-bootstrap.min.js'
+                        */
+                        node_modules + '/angular2/es6/dev/src/testing/shims_for_IE.js',
+                        node_modules + '/angular2/bundles/angular2-polyfills.min.js',
+                        node_modules + '/systemjs/dist/system.js',
+                        node_modules + '/rxjs/bundles/Rx.min.js',
+
+                        node_modules + '/angular2/bundles/angular2.dev.js',
+                        node_modules + '/angular2/bundles/router.dev.js',
+
                         node_modules + '/angular2/bundles/http.min.js',
                         node_modules + '/jquery/dist/jquery.min.js',
                         node_modules + '/ms-signalr-client/jquery.signalr-2.2.0.min.js',
