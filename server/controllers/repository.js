@@ -1,18 +1,18 @@
 'use strict';
 
 var repositoryImpl = require('../models/repository');
+var result = require('../common/result');
 
 exports.find = function(req, res) {
     checkAuthorization(req, res, function() {
         repositoryImpl
             .find(req.body.name, function (instances, error) {
                 if (error)
-                    res.status(500).send({error: error, message: error.message});
+                    res.jsonp(result.failure(error.message));
                 else {
                     if (!instances)
                         instances = [];
-
-                    res.send(instances);
+                    res.jsonp(result.success(instances));
                 }
             });
     });
@@ -23,9 +23,9 @@ exports.get = function(req, res) {
         repositoryImpl
             .get(req.body.id, function (instance, error) {
                 if (error)
-                    res.status(500).send({error: error, message: error.message});
+                    res.jsonp(result.failure(error.message));
                 else {
-                    res.send(instance ? instance.toJson() : null);
+                    res.jsonp(result.success(instance));
                 }
             });
     });
@@ -36,9 +36,9 @@ exports.update = function(req, res) {
         repositoryImpl
             .update(req.body.id, req.body.name, req.body.location, req.body.isOpen, function (instance, error) {
                 if (error)
-                    res.status(500).send({error: error, message: error.message});
+                    res.jsonp(result.failure(error.message));
                 else {
-                    res.send(instance ? instance.toJson() : null);
+                    res.jsonp(result.success(instance));
                 }
             });
     });
@@ -49,9 +49,9 @@ exports.create = function(req, res) {
         repositoryImpl
             .create(req.body.name, req.body.location, req.body.isOpen, function (instance, error) {
                 if (error)
-                    res.status(500).send({error: error, message: error.message});
+                    res.jsonp(result.failure(error.message));
                 else {
-                    res.send(instance ? instance.toJson() : null);
+                    res.jsonp(result.success(instance));
                 }
             });
     });
@@ -60,11 +60,11 @@ exports.create = function(req, res) {
 exports.delete = function(req, res) {
     checkAuthorization(req, res, function() {
         repositoryImpl
-            .delete(req.body.id, function (result, error) {
+            .delete(req.body.id, function (resultValue, error) {
                 if (error)
-                    res.status(500).send({error: error, message: error.message});
+                    res.jsonp(result.failure(error.message));
                 else {
-                    res.send(result);
+                    res.jsonp(result.success(true));
                 }
             });
     });

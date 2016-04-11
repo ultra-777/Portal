@@ -28,7 +28,7 @@ import 'rxjs/add/operator/map';
 @RouteConfig([
     { path: '/home', as: 'Home', component: HomeComponent, useAsDefault: true },
     { path: '/authentication/...', as: 'Authentication', component: AuthenticationComponent },
-    { path: '/admin', as: 'Admin', component: AdminComponent },
+    { path: '/admin/...', as: 'Admin', component: AdminComponent },
     { path: '/explorer', as: 'Explorer', component: ExplorerComponent }
 ])
 

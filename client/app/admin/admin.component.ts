@@ -4,6 +4,8 @@ import {AuthenticationService} from '../authentication/service';
 import {AccountDto} from '../authentication/account.dto.ts';
 import {Subscription} from 'rxjs/Subscription';
 import 'rxjs/add/operator/map';
+import {UpdateComponent} from "./update/update.component";
+import {RepositoryComponent} from "./repository/repository.component";
 
 
 
@@ -15,6 +17,11 @@ import 'rxjs/add/operator/map';
     encapsulation: ViewEncapsulation.None,
     moduleId: module.id
 })
+
+@RouteConfig([
+    { path: '/update', as: 'Update', component: UpdateComponent },
+    { path: '/repository', as: 'Repository', component: RepositoryComponent, useAsDefault: true }
+])
 
 export class AdminComponent implements OnInit, OnDestroy {
 

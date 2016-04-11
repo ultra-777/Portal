@@ -1,8 +1,10 @@
 'use strict';
 var exec = require('child_process').exec;
+var result = require('../common/result');
 
 exports.pull = function(req, res) {
     checkAuthorization(req, res, function() {
+
         execute(
             'git pull',
             function (callback) {
@@ -22,7 +24,7 @@ exports.install = function(req, res) {
 
 exports.build = function(req, res) {
     checkAuthorization(req, res, function() {
-        execute('grunt production',
+        execute('gulp production',
             function (callback) {
                 res.jsonp(callback);
             });
@@ -65,8 +67,9 @@ function execute(command, callback){
 
             output = output + '\r\n\r\ncomplete: ' + stopMoment;
 
+            var exactResult = (error || stderr) ? result.failure(output) : result.success(output);
 
-            callback(output);
+            callback(exactResult);
         });
 }
 

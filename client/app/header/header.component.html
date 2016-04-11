@@ -44,52 +44,33 @@
                         </li>
                     </ul>
                 </li>
-                <!--
-                </li>
-
-                    <i class="glyphicon glyphicon-off options-toolbar-medium" (click)="signOut()" title="Sign Out"></i>
-                    <div class="toolbar-item options-toolbar-huge" (click)="signOut()">Sign Out</div>
-                </li>
-
-                <li *ngIf="!account" (click)="signIn()">
-
-                    <div class="toolbar-item options-toolbar-huge" >Authentication</div>
-                    <i class="glyphicon glyphicon-log-in toolbar-human" title="Sign In"></i>
-                </li>
-                -->
             </ul>
         </div>
 
         <div class="toolbar-section toolbar-main toolbar-human">
             <ul>
-                <!--
-                <li *ngIf="account">
-                    <i class="glyphicon glyphicon-list-alt options-toolbar-medium" title="Options"></i>
-                    <div class="toolbar-item options-toolbar-huge">Options</div>
-                </li>
-                <li *ngIf="account">
-                    <i class="glyphicon glyphicon-phone-alt options-toolbar-medium" title="Звонок"></i>
-                    <div class="toolbar-item options-toolbar-huge">Call</div>
-                </li>
-                -->
                 <li *ngIf="account" (click)="explorer()">
                     <i class="glyphicon glyphicon-folder-open" title="Explorer"></i>
                     <div class="toolbar-item options-toolbar-huge">Explorer</div>
                 </li>
-                <li *ngIf="isAdmin" (click)="admin()">
-                    <i class="glyphicon glyphicon-cog" title="Administration"></i>
-                    <div class="toolbar-item options-toolbar-huge">Administration</div>
+
+                <li *ngIf="isAdmin" dropdown>
+                    <div class="dropdown-toggle" dropdownToggle>
+                        <i class="glyphicon glyphicon-cog" title="Administration"></i>
+                        <div class="toolbar-item options-toolbar-huge">Administration</div>
+                    </div>
+
+
+
+                    <ul class=" dropdown-menu dropdown-menu-right popup-menu">
+                        <li>
+                            <span class="dropdown-item" (click)="adminUpdate()">Update</span>
+                        </li>
+                        <li>
+                            <span class="dropdown-item" (click)="adminRepository()">Repository</span>
+                        </li>
+                    </ul>
                 </li>
-                <!--
-                <li *ngIf="account">
-                    <i class="glyphicon glyphicon-fire options-toolbar-medium" title="Support"></i>
-                    <div class="toolbar-item options-toolbar-huge">Support</div>
-                </li>
-                <li *ngIf="account">
-                    <i class="glyphicon glyphicon-home options-toolbar-medium" title="Home"></i>
-                    <div class="toolbar-item options-toolbar-huge">Home</div>
-                </li>
-                -->
             </ul>
         </div>
 
@@ -103,9 +84,11 @@
                     <i class="glyphicon glyphicon-menu-hamburger dropdown-toggle" dropdownToggle title="Menu"></i>
 
                     <ul class=" dropdown-menu dropdown-menu-right popup-menu">
-                        <!--<li class="divider dropdown-divider"></li>-->
                         <li *ngIf="isAdmin">
-                            <span class="dropdown-item" (click)="admin()">Administration</span>
+                            <span class="dropdown-item" (click)="adminUpdate()">Update</span>
+                        </li>
+                        <li *ngIf="isAdmin">
+                            <span class="dropdown-item" (click)="adminRepository()">Repository</span>
                         </li>
                         <li *ngIf="isAdmin" class="divider dropdown-divider"></li>
                         <li *ngIf="account">

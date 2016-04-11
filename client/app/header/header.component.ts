@@ -55,8 +55,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this._router.navigate(['Authentication/Signup']);
     }
 
-    public admin(){
-        this._router.navigate(['Admin']);
+    public adminUpdate(){
+        this._router.navigate(['Admin/Update']);
+    }
+    public adminRepository(){
+        this._router.navigate(['Admin/Repository']);
     }
 
     public explorer(){
