@@ -18,8 +18,9 @@
                         src="./app/explorer/ui-menu-icon.png"/>
 
                         <ul class="dropdown-menu dropdown-menu-right">
-                            <li *ngIf="data && !data.isRoot"><a class="menu-item" (click)="delete($event)">Delete</a></li>
-                            <li *ngIf="data && !data.isRoot"><a class="menu-item" (click)="rename($event)">Rename</a></li>
+                            <li *ngIf="data"><a class="menu-item" href="{{link}}">Download</a></li>
+                            <li *ngIf="data"><a class="menu-item" (click)="delete($event)">Delete</a></li>
+                            <li *ngIf="data"><a class="menu-item" (click)="rename($event)">Rename</a></li>
                         </ul>
                     </div>
                 </td>

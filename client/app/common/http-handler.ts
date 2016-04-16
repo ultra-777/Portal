@@ -11,28 +11,40 @@ export class HttpHandler {
     private static _http: Http = null;
     private static _headers = new Headers({ 'Content-Type': 'application/json' });
 
-    public static Post<T>(url: string, data?: Object): Promise<T> {
+    public static post<T>(url: string, data?: Object): Promise<T> {
         return new Promise<T>(resolve => {
-            let subscription = HttpHandler.GetHttp()
+            HttpHandler.getHttp()
                 .post(
                     url,
                     data ? JSON.stringify(data) : null,
                     { headers: HttpHandler._headers}
                 )
-                .map((res: any) => JsonEx.Parse2Lower<T>(res.text()))
+                .map((res: any) => JsonEx.parse2Lower<T>(res.text()))
                 .subscribe((result) => {
-                    subscription.unsubscribe();
                     resolve(result);
                 });
         });
     }
 
-    public static Get<T>(url: string, data?: Object): Promise<T> {
+    public static get<T>(url: string, data?: Object): Promise<T> {
+        let finalUrl = HttpHandler.buildGetUrl(url, data);
+        return new Promise<T>(resolve => {
+            HttpHandler.getHttp()
+                .get(
+                    finalUrl
+                )
+                .map((res: any) => JsonEx.parse2Lower<T>(res.text()))
+                .subscribe((result) => {
+                    resolve(result);
+                });
+        });
+    }
 
+    private static buildGetUrl(url: string, data?: Object){
         let finalUrl = url;
         if (finalUrl && data && (typeof data == 'object')){
             let index = 0;
-            for (var key in data){
+            for (let key in data){
                 let theValue = data[key];
                 if (!theValue)
                     continue;
@@ -46,21 +58,10 @@ export class HttpHandler {
                 index = index + 1;
             }
         }
-
-        return new Promise<T>(resolve => {
-            let subscription = HttpHandler.GetHttp()
-                .get(
-                    finalUrl
-                )
-                .map((res: any) => JsonEx.Parse2Lower<T>(res.text()))
-                .subscribe((result) => {
-                    subscription.unsubscribe();
-                    resolve(result);
-                });
-        });
+        return finalUrl;
     }
 
-    private static GetHttp() : Http{
+    private static getHttp() : Http{
         if (HttpHandler._http == null) {
             let injector = Injector.resolveAndCreate([HTTP_PROVIDERS]);
             let http = injector.get(Http);

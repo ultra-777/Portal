@@ -38,7 +38,7 @@ export class UpdateService {
     };
 
     private call(action: string): Promise<ResultImpl<string>> {
-        return HttpHandler.Post<ResultImpl<string>>(
+        return HttpHandler.post<ResultImpl<string>>(
             UpdateService._controllerPrefix + action,
             null);
     }

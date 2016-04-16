@@ -306,6 +306,13 @@ export class Node {
         });
     }
 
+    getDownloadPath(): Promise<string>{
+        let local = this;
+        return new Promise<string>(resolve => {
+            resolve(Node._service.getDownloadUrl(local.id));
+        });
+    }
+
     loadContainers(): Promise<boolean>{
         let local = this;
         return new Promise<boolean>(resolve => {

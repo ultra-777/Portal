@@ -21,7 +21,7 @@ export class RepositoryService {
 
     public static removeRepository(id: number): Promise<ResultImpl<boolean>>{
         return new Promise<ResultImpl<boolean>>(resolve => {
-            let result = HttpHandler.Post<ResultImpl<boolean>>(
+            let result = HttpHandler.post<ResultImpl<boolean>>(
                 RepositoryService._controllerPrefix + 'delete',
                 {
                     id: id
@@ -34,7 +34,7 @@ export class RepositoryService {
 
     public static findRepositories(name: string = null) : Promise<ResultImpl<Array<RepositoryItem>>> {
         return new Promise<ResultImpl<Array<RepositoryItem>>>(resolve => {
-            let rawPromise = HttpHandler.Post<ResultImpl<Array<RepositoryDto>>>(
+            let rawPromise = HttpHandler.post<ResultImpl<Array<RepositoryDto>>>(
                 RepositoryService._controllerPrefix + 'find',
                 {
                     name: name
@@ -55,7 +55,7 @@ export class RepositoryService {
 
     public static getRepository(id: number) : Promise<ResultImpl<RepositoryDto>>{
 
-        return HttpHandler.Post<ResultImpl<RepositoryDto>>(
+        return HttpHandler.post<ResultImpl<RepositoryDto>>(
                 RepositoryService._controllerPrefix + 'get',
                 {
                     id: id
@@ -64,7 +64,7 @@ export class RepositoryService {
 
     public static updateRepository(instance: RepositoryItem) : Promise<ResultImpl<RepositoryDto>> {
         return (instance.id) ?
-                HttpHandler.Post<ResultImpl<RepositoryDto>>(
+                HttpHandler.post<ResultImpl<RepositoryDto>>(
                     RepositoryService._controllerPrefix + 'update',
                     {
                         id: instance.id,
@@ -73,7 +73,7 @@ export class RepositoryService {
                         isOpen: instance.isOpen
                     }
                 ) :
-                HttpHandler.Post<ResultImpl<RepositoryDto>>(
+                HttpHandler.post<ResultImpl<RepositoryDto>>(
                     RepositoryService._controllerPrefix + 'create',
                     {
                         name: instance.name,

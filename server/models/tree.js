@@ -178,7 +178,7 @@ getInstance = function(id, user, callback/*function(instance, error)*/){
                             if (node && node.file){
                                 var location = node.file.getLocation();
                                 var stream = fs.createReadStream(location);
-                                callback && callback(node.file.name, stream, null);
+                                callback && callback(node.name, stream, null);
                             }
                             else
                                 callback && callback(null, 'Not found');

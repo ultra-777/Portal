@@ -31,14 +31,14 @@ export class ExplorerService {
 
     getRoot() : Promise<ResultImpl<NodeDto>> {
         return HttpHandler
-                .Post<ResultImpl<NodeDto>>(
+                .post<ResultImpl<NodeDto>>(
                     ExplorerService._controllerPrefix + 'root',
                     null);
         // return data.httpRequest('GET', controllerPrefix + 'root', null);
     };
 
     getNode(id): Promise<ResultImpl<NodeDto>> {
-        return HttpHandler.Post<ResultImpl<NodeDto>>(
+        return HttpHandler.post<ResultImpl<NodeDto>>(
             ExplorerService._controllerPrefix + 'node',
             {
                 'id': id
@@ -46,7 +46,7 @@ export class ExplorerService {
     };
 
     download(id) {
-        return HttpHandler.Post<ResultImpl<any>>(
+        return HttpHandler.get<ResultImpl<any>>(
             ExplorerService._controllerPrefix + 'download',
             {
                 'id': id
@@ -55,7 +55,7 @@ export class ExplorerService {
     };
 
     delete(id) {
-        return HttpHandler.Post<ResultImpl<any>>(
+        return HttpHandler.post<ResultImpl<any>>(
             ExplorerService._controllerPrefix + 'delete',
             {
                 'id': id
@@ -64,7 +64,7 @@ export class ExplorerService {
     };
 
     newFolder(id, name) {
-        return HttpHandler.Post<ResultImpl<any>>(
+        return HttpHandler.post<ResultImpl<any>>(
             ExplorerService._controllerPrefix + 'newFolder',
             {
                 'id': id,
@@ -79,7 +79,7 @@ export class ExplorerService {
     };
 
     initBlob(parentId, name, totalSize, chunkSize) {
-        return HttpHandler.Post<ResultImpl<any>>(
+        return HttpHandler.post<ResultImpl<any>>(
             ExplorerService._controllerPrefix + 'initBlob',
             {
                 'folderId': parentId,
@@ -91,7 +91,7 @@ export class ExplorerService {
     };
 
     addBlobChunk(blobId, chunkIndex, data) {
-        return HttpHandler.Post<ResultImpl<any>>(
+        return HttpHandler.post<ResultImpl<any>>(
             ExplorerService._controllerPrefix + 'addBlobChunk',
             {
                 'blobId': blobId,
@@ -102,7 +102,7 @@ export class ExplorerService {
     };
 
     releaseBlob(blobId) {
-        return HttpHandler.Post<ResultImpl<any>>(
+        return HttpHandler.post<ResultImpl<any>>(
             ExplorerService._controllerPrefix + 'releaseBlob',
             {
                 'blobId': blobId
@@ -111,7 +111,7 @@ export class ExplorerService {
     };
 
     rename (nodeId, newName) {
-        return HttpHandler.Post<ResultImpl<any>>(
+        return HttpHandler.post<ResultImpl<any>>(
             ExplorerService._controllerPrefix + 'rename',
             {
                 'id': nodeId,
@@ -121,7 +121,7 @@ export class ExplorerService {
     };
 
     moveChild (id, newChildId){
-        return HttpHandler.Post<ResultImpl<any>>(
+        return HttpHandler.post<ResultImpl<any>>(
             ExplorerService._controllerPrefix + 'moveChild',
             {
                 'parentId': id,

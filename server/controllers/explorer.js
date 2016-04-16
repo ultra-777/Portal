@@ -407,8 +407,8 @@ exports.uploadFile = function(req, res, next){
 
 function checkAuthorization(req, res, callback/*function()*/){
 
-    callback && callback();
-    return;
+    //callback && callback();
+    // return;
     if (req.user) {
         callback && callback();
     }

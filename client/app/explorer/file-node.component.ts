@@ -15,6 +15,7 @@ import {BytesPipe} from "./bytes-pipe";
 import {RenameComponent} from "./rename.component";
 import {RenameContext} from "./rename-context";
 import {NodeComponent} from "./node.component";
+import {HttpHandler} from "../common/http-handler";
 
 
 @Component({
@@ -35,8 +36,11 @@ export class FileNodeComponent extends NodeComponent implements OnInit, OnDestro
     @Output()
     public onNodeSelected = new EventEmitter();
 
+    public link: string;
+
     constructor(messageBox: MessageBoxService, modal: ModalService, private _element: ElementRef, private _dom: BrowserDomAdapter) {
         super(messageBox, modal);
+        this.link = 'http://www.rbc.ru';
     }
 
     ngOnInit() {
@@ -80,5 +84,13 @@ export class FileNodeComponent extends NodeComponent implements OnInit, OnDestro
 
     ngOnDestroy() {
         console.log('FileNodeComponent.ngOnDestroy');
+    }
+
+    protected initialize(){
+        super.initialize();
+        let local = this;
+        this.data.getDownloadPath().then(result => {
+            local.link = result;
+        });
     }
 }

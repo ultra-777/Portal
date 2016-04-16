@@ -55,7 +55,7 @@ export class AuthenticationService {
 
         let promise =
             HttpHandler
-                .Post<ResultImpl<AccountDto>>(
+                .post<ResultImpl<AccountDto>>(
                     '/security/signup',
                     {
                         login: login,
@@ -74,7 +74,7 @@ export class AuthenticationService {
 
         let promise =
             HttpHandler
-                .Post<ResultImpl<AccountDto>>(
+                .post<ResultImpl<AccountDto>>(
                     '/security/signin',
                     {
                         login: login,
@@ -90,7 +90,7 @@ export class AuthenticationService {
 
         let promise =
             HttpHandler
-                .Post<ResultImpl<AccountDto>>(
+                .post<ResultImpl<AccountDto>>(
                     '/security/signout');
 
         this.HandleAuthentication(promise);
@@ -101,7 +101,7 @@ export class AuthenticationService {
     private LoadSession(){
         let promise =
             HttpHandler
-                .Post<ResultImpl<SessionDto>>(
+                .post<ResultImpl<SessionDto>>(
                     '/security/getSessionInfo',
                     null);
 
