@@ -16,12 +16,11 @@ import {BytesPipe} from "./bytes-pipe";
 
 @Component({
     selector: 'explorer',
-    templateUrl: 'explorer.component.html',
+    templateUrl: 'app/explorer/explorer.component.html',
     directives: [FolderNodeComponent, FileNodeComponent],
     providers: [ExplorerService],
     pipes:[OrderNodesByNamePipe, BytesPipe],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 
 export class ExplorerComponent implements OnInit, OnDestroy {

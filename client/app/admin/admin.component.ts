@@ -11,11 +11,10 @@ import {RepositoryComponent} from "./repository/repository.component";
 
 @Component({
     selector: 'authenticaton',
-    templateUrl: 'admin.component.html',
+    templateUrl: 'app/admin/admin.component.html',
     directives: [ROUTER_DIRECTIVES],
     providers: [AuthenticationService],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 
 @RouteConfig([

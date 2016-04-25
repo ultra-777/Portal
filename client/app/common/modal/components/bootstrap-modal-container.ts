@@ -16,8 +16,7 @@ import {ModalDialogInstance} from '../models/modal-dialog-instance';
         '(body:keydown)': 'documentKeypress($event)',
         '(click)': 'onClick()'
     },
-    'templateUrl': 'bootstrap-modal-container.html',
-    'moduleId': module.id
+    templateUrl: 'app/common/modal/components/bootstrap-modal-container.html'
 })
 export class BootstrapModalContainer {
     dialogInstance: ModalDialogInstance;

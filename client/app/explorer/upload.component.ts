@@ -10,10 +10,9 @@ import {CustomModalImpl} from "../common/modal/providers/custom-modal-impl";
 
 @Component({
     selector: 'upload',
-    templateUrl: 'upload.component.html',
+    templateUrl: 'app/explorer/upload.component.html',
     providers: [],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 export class UploadComponent extends CustomModalImpl<UploadContext> {
 

@@ -10,10 +10,9 @@ import {CustomModalImpl} from "../common/modal/providers/custom-modal-impl";
 
 @Component({
     selector: 'rename',
-    templateUrl: 'rename.component.html',
+    templateUrl: 'app/explorer/rename.component.html',
     providers: [],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 export class RenameComponent extends CustomModalImpl<RenameContext> {
 

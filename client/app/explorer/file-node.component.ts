@@ -20,13 +20,12 @@ import {HttpHandler} from "../common/http-handler";
 
 @Component({
     selector: 'file-node',
-    templateUrl: 'file-node.component.html',
+    templateUrl: 'app/explorer/file-node.component.html',
     directives: [DROPDOWN_DIRECTIVES, FileNodeComponent],
     providers: [MessageBoxService, ModalService, BrowserDomAdapter],
     inputs: ['nodePromise'],
     pipes:[BytesPipe],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 
 export class FileNodeComponent extends NodeComponent implements OnInit, OnDestroy {

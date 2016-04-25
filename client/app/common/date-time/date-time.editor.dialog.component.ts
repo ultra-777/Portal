@@ -12,9 +12,8 @@ import {ICustomModal, ICustomModalComponent} from '../modal/models/custom-modal'
 @Component({
     selector: 'date-time-editor-dialog',
     directives: [CORE_DIRECTIVES, DATEPICKER_DIRECTIVES, Timepicker],
-    templateUrl: 'date-time.editor.dialog.component.html',
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    templateUrl: 'app/common/date-time/date-time.editor.dialog.component.html',
+    encapsulation: ViewEncapsulation.None
 })
 export class DateTimeEditorDialog implements ICustomModalComponent {
     dialog: ModalDialogInstance;

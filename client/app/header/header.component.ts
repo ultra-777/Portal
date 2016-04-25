@@ -9,10 +9,9 @@ import {AccountDto} from '../authentication/account.dto.ts';
 
 @Component({
     selector: 'header',
-    templateUrl: 'header.component.html',
+    templateUrl: 'app/header/header.component.html',
     directives: [CORE_DIRECTIVES, DROPDOWN_DIRECTIVES],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 
 export class HeaderComponent implements OnInit, OnDestroy {

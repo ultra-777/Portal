@@ -12,11 +12,10 @@ import 'rxjs/add/operator/map';
 
 @Component({
     selector: 'authenticaton',
-    templateUrl: 'authentication.component.html',
+    templateUrl: 'app/authentication/authentication.component.html',
     directives: [ROUTER_DIRECTIVES, SigninComponent],
     providers: [AuthenticationService],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 
 @RouteConfig([

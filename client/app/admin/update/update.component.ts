@@ -13,12 +13,11 @@ import {MessageBoxService} from "../../common/message-box/message-box.service";
 
 @Component({
     selector: 'admin-update',
-    templateUrl: 'update.component.html',
+    templateUrl: 'app/admin/update/update.component.html',
     directives: [],
     providers: [ROUTER_DIRECTIVES, UpdateService, MessageBoxService],
     pipes:[],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 
 export class UpdateComponent implements OnInit, OnDestroy {

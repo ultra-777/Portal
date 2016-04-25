@@ -18,11 +18,10 @@ import 'rxjs/add/operator/map';
 
 @Component({
     selector: 'portal-root',
-    templateUrl: 'root.component.html',
+    templateUrl: 'app/root.component.html',
     directives: [ROUTER_DIRECTIVES, HomeComponent, HeaderComponent, FeederComponent, AuthenticationComponent, NgClass, NgStyle],
     providers: [AuthenticationService, Modal, ElementRef],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 
 @RouteConfig([

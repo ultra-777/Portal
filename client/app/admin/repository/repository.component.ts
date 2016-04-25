@@ -14,12 +14,11 @@ import {RepositoryItem} from "./repository-item";
 
 @Component({
     selector: 'admin-repository',
-    templateUrl: 'repository.component.html',
+    templateUrl: 'app/admin/repository/repository.component.html',
     directives: [],
     providers: [ROUTER_DIRECTIVES, RepositoryService, MessageBoxService],
     pipes:[],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 
 export class RepositoryComponent implements OnInit, OnDestroy {

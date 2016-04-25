@@ -8,10 +8,9 @@ import {MessageBoxType, MessageBoxContent} from './message-box.content';
 
 @Component({
     selector: 'message-box',
-    templateUrl: 'message-box.component.html',
+    templateUrl: 'app/common/message-box/message-box.component.html',
     providers: [Modal, ElementRef],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 export class MessageBoxComponent implements ICustomModalComponent {
     dialog: ModalDialogInstance;

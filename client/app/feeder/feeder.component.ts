@@ -12,10 +12,9 @@ import {AccountDto} from '../authentication/account.dto.ts';
 
 @Component({
     selector: 'feeder',
-    templateUrl: 'feeder.component.html',
+    templateUrl: 'app/feeder/feeder.component.html',
     directives: [CORE_DIRECTIVES, DROPDOWN_DIRECTIVES, FORM_DIRECTIVES],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 
 export class FeederComponent implements OnInit, OnDestroy, OnChanges {

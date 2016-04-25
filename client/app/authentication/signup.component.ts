@@ -6,11 +6,10 @@ import {MessageBoxService} from '../common/message-box/message-box.service';
 
 @Component({
     selector: 'signup',
-    templateUrl: 'signup.component.html',
+    templateUrl: 'app/authentication/signup.component.html',
     directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES],
     providers: [MessageBoxService],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 
 

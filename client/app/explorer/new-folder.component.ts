@@ -8,10 +8,9 @@ import {CustomModalImpl} from "../common/modal/providers/custom-modal-impl";
 
 @Component({
     selector: 'new-folder',
-    templateUrl: 'new-folder.component.html',
+    templateUrl: 'app/explorer/new-folder.component.html',
     providers: [],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 export class NewFolderComponent extends CustomModalImpl<NewFolderContext> {
     private _current: string;

@@ -27,13 +27,12 @@ import {NodeComponent} from "./node.component";
 
 @Component({
     selector: 'folder-node',
-    templateUrl: 'folder-node.component.html',
+    templateUrl: 'app/explorer/folder-node.component.html',
     directives: [DROPDOWN_DIRECTIVES, FolderNodeComponent, PROGRESSBAR_DIRECTIVES],
     providers: [MessageBoxService, ModalService, BrowserDomAdapter],
     inputs: ['nodePromise'],
     pipes:[OrderNodesByNamePipe],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 
 export class FolderNodeComponent extends NodeComponent implements OnInit, OnDestroy {

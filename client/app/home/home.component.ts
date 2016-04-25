@@ -10,11 +10,10 @@ import {Subscription} from 'rxjs/Subscription';
 
 @Component({
     selector: 'home',
-    templateUrl: 'home.component.html',
+    templateUrl: 'app/home/home.component.html',
     directives: [CORE_DIRECTIVES, ROUTER_DIRECTIVES],
     //providers: [DateTimeEditorDialogService, MessageBoxService],
-    encapsulation: ViewEncapsulation.None,
-    moduleId: module.id
+    encapsulation: ViewEncapsulation.None
 })
 
 /*

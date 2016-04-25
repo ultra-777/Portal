@@ -10,6 +10,7 @@
             libsFolderName: 'libs',
             appFolderName: 'app',
             fontFolderName: 'fonts',
+            bundlesFileName: 'bundles.js',
             getAppFolderPath: function () {
                 return this.root + '/' + this.appFolderName;
             },
@@ -19,7 +20,7 @@
             getFontFolderPath: function () {
                 return this.root + '/' + this.fontFolderName;
             },
-            getCleanPath: function () {
+            get cleanPath() {
                 return [
                     this.getAppFolderPath(),
                     this.getLibsFolderPath(),
@@ -37,11 +38,12 @@
             bootstrap: sourcesRoot + '/bootstrap.ts',
             favicon: [sourcesRoot + '/favicon.ico', sourcesRoot + '/favicon-32.png'],
             appGrain: sourcesRoot + '/app_grain.png',
-            index: {
-                base: sourcesRoot + '/index.html',
-                development: sourcesRoot + '/index.development.html',
-                production: sourcesRoot + '/index.production.html'
-            },
+            bundleFileName: 'bundle.js',
+            index: sourcesRoot + '/index.html',
+            systemJsKey: '<!-- systemjs.config -->',
+            cleanPath: [
+                sourcesRoot + '/*.js'
+            ],
             ts: [
                 sourcesRoot + '/app/**/*.ts'
             ],
@@ -77,7 +79,7 @@
                     ]
                 },
                 production: {
-                    js: [
+                    get js() {return [
                         /*
                         node_modules + '/angular2/es6/dev/src/testing/shims_for_IE.js',
                         node_modules + '/angular2/bundles/angular2-polyfills.min.js',
@@ -94,6 +96,7 @@
                         node_modules + '/angular2/es6/dev/src/testing/shims_for_IE.js',
                         node_modules + '/angular2/bundles/angular2-polyfills.min.js',
                         node_modules + '/systemjs/dist/system.js',
+                        node_modules + '/moment/min/moment.min.js',
                         node_modules + '/rxjs/bundles/Rx.min.js',
 
                         node_modules + '/angular2/bundles/angular2.dev.js',
@@ -102,15 +105,20 @@
                         node_modules + '/angular2/bundles/http.min.js',
                         node_modules + '/jquery/dist/jquery.min.js',
                         node_modules + '/ms-signalr-client/jquery.signalr-2.2.0.min.js',
-                        node_modules + '/moment/min/moment.min.js',
-                        node_modules + '/ng2-bootstrap/bundles/ng2-bootstrap.min.js'
-                    ],
+
+                        node_modules + '/ng2-bootstrap/bundles/ng2-bootstrap.min.js',
+                        sourcesRoot + '/' + wwwRoot.source.bundleFileName
+                    ]},
+                    get jsLib() {return [
+                        node_modules + '/moment/min/moment.min.js'
+                    ]},
                     css: [
                         node_modules + '/bootstrap/dist/css/bootstrap.min.css',
                         node_modules + '/bootstrap/dist/css/bootstrap.min.css.map'
                     ]
                 },
                 fonts: [
+                    node_modules + '/bootstrap/dist/fonts/glyphicons-halflings-regular.eot',
                     node_modules + '/bootstrap/dist/fonts/glyphicons-halflings-regular.ttf',
                     node_modules + '/bootstrap/dist/fonts/glyphicons-halflings-regular.woff',
                     node_modules + '/bootstrap/dist/fonts/glyphicons-halflings-regular.woff2',
